@@ -1,399 +1,758 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Womens Day – Enhanced</title>
-  <style>
-    :root{
-      --pink:#ec4899; --rose:#f43f5e; --purple:#8b5cf6; --cyan:#06b6d4; --green:#10b981;
-      --bg1:#4c1d95; --bg2:#831843; --bg3:#7f1d1d;
-    }
-    html,body{height:100%;margin:0}
-    body{
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
-      background: radial-gradient(1200px 800px at 20% 10%, rgba(255,255,255,.08), transparent 60%),
-                  linear-gradient(135deg, #3b0764 0%, #9d174d 50%, #7f1d1d 100%);
-      color:#fff; overflow-x:hidden;
-    }
-    .container{max-width:1100px;margin:0 auto;padding:32px 16px}
-    .center{text-align:center}
-    .title{font-weight:800;font-size:56px;line-height:1.05;
-      background: linear-gradient(90deg,#fbcfe8,#e9d5ff,#a5f3fc);
-      -webkit-background-clip:text;background-clip:text;color:transparent; margin:8px 0 4px}
-    .subtitle{opacity:.9;font-size:28px;margin:0 0 6px}
-    .mono{font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; color:#e9d5ff}
-
-    .grid{display:grid;gap:24px;grid-template-columns: 1fr;}
-    @media(min-width:900px){.grid{grid-template-columns:1fr 1fr}}
-
-    .card{background: rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.2);
-          backdrop-filter: blur(8px);border-radius:16px;padding:20px}
-
-    .row{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:10px}
-    .heart{display:inline-block}
-
-    /* particles */
-    .p{position:fixed;border-radius:999px;background:#fbcfe8;opacity:.5;pointer-events:none}
-    @keyframes float{0%,100%{transform:translate(0,0)}25%{transform:translate(10px,-20px)}50%{transform:translate(-10px,-10px)}75%{transform:translate(5px,-30px)}}
-
-    /* bars */
-    .bar{height:12px;background:rgba(255,255,255,.25);border-radius:999px;overflow:hidden}
-    .bar > span{display:block;height:100%;border-radius:999px;transform-origin:left center;animation:grow 1.2s ease forwards}
-    @keyframes grow{from{transform:scaleX(.1)}to{transform:scaleX(1)}}
-
-    .footer{margin-top:24px;text-align:center;background: linear-gradient(90deg, rgba(236,72,153,.25), rgba(168,85,247,.25));
-            border:1px solid rgba(255,255,255,.2);border-radius:16px;padding:26px}
-
-    .metric-title{color:#a5f3fc;font-weight:700;margin:0 0 10px}
-    .trend-title{color:#ddd6fe;font-weight:700;margin:0 0 10px}
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>💕 Trái Tim 3D Valentine</title>
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Great+Vibes&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body {
+    width: 100%; height: 100%;
+    overflow: hidden;
+    background: #000;
+    cursor: grab;
+    font-family: 'Dancing Script', cursive;
+  }
+  body:active { cursor: grabbing; }
+  canvas { display: block; }
+  #hint {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: rgba(255,150,190,0.7);
+    font-family: 'Dancing Script', cursive;
+    font-size: 16px;
+    pointer-events: none;
+    animation: fadeHint 5s ease-in-out forwards;
+    text-shadow: 0 0 20px rgba(255,100,160,0.5);
+    white-space: nowrap;
+  }
+  @keyframes fadeHint {
+    0% { opacity: 0; transform: translateX(-50%) translateY(10px); }
+    15% { opacity: 1; transform: translateX(-50%) translateY(0); }
+    75% { opacity: 1; }
+    100% { opacity: 0; }
+  }
+  #musicControl {
+    position: fixed;
+    top: 24px;
+    right: 24px;
+    width: 50px;
+    height: 50px;
+    background: rgba(255, 100, 160, 0.2);
+    border: 2px solid rgba(255, 150, 190, 0.5);
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+    z-index: 1000;
+  }
+  #musicControl:hover {
+    background: rgba(255, 100, 160, 0.4);
+    border-color: rgba(255, 150, 190, 0.8);
+    transform: scale(1.1);
+  }
+  #musicControl.playing {
+    animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { box-shadow: 0 0 20px rgba(255, 100, 160, 0.3); }
+    50% { box-shadow: 0 0 30px rgba(255, 100, 160, 0.6); }
+  }
+</style>
 </head>
 <body>
-  <div id="particles"></div>
-  <div class="container">
-    <div class="center">
-      <div class="row">
-        <!-- TrendingUp icon -->
-        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" style="color:#f9a8d4"><path d="M3 17l6-6 4 4 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M14 8h7v7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        <h1 class="title">20/10/2025</h1>
-        <!-- Sparkles icon -->
-        <svg width="40" height="40" viewBox="0 0 24 24" fill="currentColor" style="color:#99f6e4"><path d="M12 2l1.8 3.6L18 7.4l-3.6 1.8L12 13l-1.8-3.8L6 7.4l4.2-1.8L12 2zM4 14l1 2 2 1-2 1-1 2-1-2-2-1 2-1 1-2zm14 1l1.5 3L23 20.5 19.5 22 18 25l-1.5-3L13 20.5 16.5 19 18 15z"/></svg>
-      </div>
-      <p class="subtitle">Chúc mừng Ngày Phụ nữ Việt Nam</p>
-      <p class="mono">100% Sắc đẹp | 100% Tài năng</p>
-    </div>
+<div id="hint">✨ Kéo chuột để xoay trái tim ✨</div>
+<div id="musicControl" class="playing" title="Click để bật/tắt nhạc">🎵</div>
+<audio id="bgMusic" loop>
+  <source src="I Do.mp3" type="audio/mpeg">
+</audio>
 
-    <!-- Featured Image Section -->
-    <div class="center" style="margin: 32px 0">
-      <div class="card" style="max-width:600px;margin:0 auto;padding:12px">
-        <img src="anh.jpg" 
-             alt="Special Image" 
-             style="width:100%;height:auto;border-radius:12px;display:block;box-shadow:0 8px 32px rgba(236,72,153,0.3)">
-      </div>
-    </div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+// ============================================================
+// CONFIG
+// ============================================================
+const CONFIG = {
+  heartParticles: 10000,
+  heartScale: 10,
+  particleSizeMin: 0.06,
+  particleSizeMax: 0.22,
+  pulseSpeed: 1.2,
+  pulseMagnitude: 0.04,
 
-    <div class="grid">
-      <!-- Bouquet Card (SVG) -->
-      <div class="card">
-        <div class="row">
-          <!-- hearts row top -->
-          <svg class="heart" width="32" height="32" viewBox="0 0 24 24" style="color:#f472b6"><path fill="currentColor" d="M12 21s-6.716-4.338-9.193-7.245C.55 11.23 1.132 7.79 3.757 6.23 6.382 4.671 9.06 6.067 12 9c2.94-2.933 5.618-4.329 8.243-2.77 2.625 1.56 3.207 5 .95 7.525C18.716 16.662 12 21 12 21z"/></svg>
-          <svg class="heart" width="36" height="36" viewBox="0 0 24 24" style="color:#fb7185"><path fill="currentColor" d="M12 21s-6.716-4.338-9.193-7.245C.55 11.23 1.132 7.79 3.757 6.23 6.382 4.671 9.06 6.067 12 9c2.94-2.933 5.618-4.329 8.243-2.77 2.625 1.56 3.207 5 .95 7.525C18.716 16.662 12 21 12 21z"/></svg>
-          <svg class="heart" width="40" height="40" viewBox="0 0 24 24" style="color:#f87171"><path fill="currentColor" d="M12 21s-6.716-4.338-9.193-7.245C.55 11.23 1.132 7.79 3.757 6.23 6.382 4.671 9.06 6.067 12 9c2.94-2.933 5.618-4.329 8.243-2.77 2.625 1.56 3.207 5 .95 7.525C18.716 16.662 12 21 12 21z"/></svg>
-          <svg class="heart" width="36" height="36" viewBox="0 0 24 24" style="color:#fb7185"><path fill="currentColor" d="M12 21s-6.716-4.338-9.193-7.245C.55 11.23 1.132 7.79 3.757 6.23 6.382 4.671 9.06 6.067 12 9c2.94-2.933 5.618-4.329 8.243-2.77 2.625 1.56 3.207 5 .95 7.525C18.716 16.662 12 21 12 21z"/></svg>
-          <svg class="heart" width="32" height="32" viewBox="0 0 24 24" style="color:#f472b6"><path fill="currentColor" d="M12 21s-6.716-4.338-9.193-7.245C.55 11.23 1.132 7.79 3.757 6.23 6.382 4.671 9.06 6.067 12 9c2.94-2.933 5.618-4.329 8.243-2.77 2.625 1.56 3.207 5 .95 7.525C18.716 16.662 12 21 12 21z"/></svg>
-        </div>
-        <svg viewBox="0 0 480 520" style="width:100%;height:380px">
-  <defs>
-    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
-      <feGaussianBlur stdDeviation="4" result="b"/>
-      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
-    </filter>
-    <radialGradient id="gPink" cx="50%" cy="40%" r="60%">
-      <stop offset="0%" stop-color="#fff" stop-opacity=".9"/>
-      <stop offset="35%" stop-color="#fecdd3" stop-opacity=".95"/>
-      <stop offset="100%" stop-color="#ec4899"/>
-    </radialGradient>
-    <radialGradient id="gViolet" cx="50%" cy="40%" r="60%">
-      <stop offset="0%" stop-color="#fff" stop-opacity=".9"/>
-      <stop offset="35%" stop-color="#ddd6fe" stop-opacity=".95"/>
-      <stop offset="100%" stop-color="#8b5cf6"/>
-    </radialGradient>
-    <radialGradient id="gRed" cx="50%" cy="40%" r="60%">
-      <stop offset="0%" stop-color="#fff" stop-opacity=".9"/>
-      <stop offset="35%" stop-color="#fecaca" stop-opacity=".95"/>
-      <stop offset="100%" stop-color="#f43f5e"/>
-    </radialGradient>
-    <radialGradient id="gCyan" cx="50%" cy="40%" r="60%">
-      <stop offset="0%" stop-color="#fff" stop-opacity=".9"/>
-      <stop offset="35%" stop-color="#a5f3fc" stop-opacity=".95"/>
-      <stop offset="100%" stop-color="#06b6d4"/>
-    </radialGradient>
-    <radialGradient id="gOrange" cx="50%" cy="40%" r="60%">
-      <stop offset="0%" stop-color="#fff" stop-opacity=".9"/>
-      <stop offset="35%" stop-color="#fed7aa" stop-opacity=".95"/>
-      <stop offset="100%" stop-color="#fb923c"/>
-    </radialGradient>
-    
-    <!-- Animated gradients for color changing hearts -->
-    <radialGradient id="animGrad1">
-      <stop offset="0%" stop-color="#fff" stop-opacity=".9"/>
-      <stop offset="100%">
-        <animate attributeName="stop-color" 
-          values="#ec4899;#8b5cf6;#f43f5e;#06b6d4;#ec4899" 
-          dur="8s" repeatCount="indefinite"/>
-      </stop>
-    </radialGradient>
-    
-    <radialGradient id="animGrad2">
-      <stop offset="0%" stop-color="#fff" stop-opacity=".9"/>
-      <stop offset="100%">
-        <animate attributeName="stop-color" 
-          values="#8b5cf6;#f43f5e;#06b6d4;#ec4899;#8b5cf6" 
-          dur="7s" repeatCount="indefinite"/>
-      </stop>
-    </radialGradient>
-    
-    <radialGradient id="animGrad3">
-      <stop offset="0%" stop-color="#fff" stop-opacity=".9"/>
-      <stop offset="100%">
-        <animate attributeName="stop-color" 
-          values="#f43f5e;#06b6d4;#ec4899;#8b5cf6;#f43f5e" 
-          dur="9s" repeatCount="indefinite"/>
-      </stop>
-    </radialGradient>
-    
-    <symbol id="heart" viewBox="-20 -20 40 40">
-      <path d="M0,-10 C-6,-16 -15,-16 -15,-8 C-15,-2 -10,4 0,12 C10,4 15,-2 15,-8 C15,-16 6,-16 0,-10 Z" />
-    </symbol>
-    <path id="orbitBig" d="M240,210 m-130,0 a130,130 0 1,1 260,0 a130,130 0 1,1 -260,0"/>
-    <path id="orbitMid" d="M240,210 m-95,0 a95,95 0 1,1 190,0 a95,95 0 1,1 -190,0"/>
-    <path id="orbitSmall" d="M240,210 m-62,0 a62,62 0 1,1 124,0 a62,62 0 1,1 -124,0"/>
-  </defs>
-
-  <circle cx="240" cy="210" r="150" fill="url(#gPink)" opacity="0.12"/>
-
-  <g filter="url(#glow)">
-    <path d="M240,270 C235,330 210,380 185,460" stroke="#34d399" stroke-width="4" fill="none"/>
-    <path d="M240,270 C245,330 270,380 295,460" stroke="#10b981" stroke-width="4" fill="none"/>
-    <path d="M240,270 C220,320 200,360 160,460" stroke="#22c55e" stroke-width="3" fill="none"/>
-    <path d="M240,270 C260,320 280,360 320,460" stroke="#22c55e" stroke-width="3" fill="none"/>
-  </g>
-
-  <g filter="url(#glow)" transform="translate(240,258)">
-    <use href="#heart" fill="url(#gPink)" stroke="#fb7185" stroke-width="1">
-      <animateTransform attributeName="transform" type="scale" values="1;1.1;1" dur="2.8s" repeatCount="indefinite"/>
-    </use>
-    <use href="#heart" transform="translate(-18,6) scale(.8) rotate(-10)" fill="url(#gRed)"/>
-    <use href="#heart" transform="translate(18,6) scale(.8) rotate(10)" fill="url(#gViolet)"/>
-  </g>
-
-  <!-- Floating hearts with color changing animation -->
-  <g filter="url(#glow)">
-    <!-- OUTER RING (10 hearts with rainbow colors) -->
-    <g>
-      <use href="#heart" fill="url(#animGrad1)" transform="scale(.135)" stroke="#fb7185" stroke-width="1">
-        <animateMotion dur="22s" repeatCount="indefinite" rotate="auto"><mpath href="#orbitBig"/></animateMotion>
-        <animateTransform attributeName="transform" type="scale" additive="sum" 
-          values=".135;.16;.135" dur="3s" repeatCount="indefinite"/>
-      </use>
-      
-      <use href="#heart" fill="url(#animGrad2)" transform="scale(.15)" stroke="#c4b5fd" stroke-width="1">
-        <animateMotion dur="23s" begin="-2s" repeatCount="indefinite" rotate="auto"><mpath href="#orbitBig"/></animateMotion>
-        <animateTransform attributeName="transform" type="scale" additive="sum" 
-          values=".15;.18;.15" dur="3.5s" repeatCount="indefinite"/>
-      </use>
-      
-      <use href="#heart" fill="url(#animGrad3)" transform="scale(.12)" stroke="#f9a8d4" stroke-width="1">
-        <animateMotion dur="24s" begin="-4s" repeatCount="indefinite" rotate="auto"><mpath href="#orbitBig"/></animateMotion>
-        <animateTransform attributeName="transform" type="scale" additive="sum" 
-          values=".12;.14;.12" dur="2.8s" repeatCount="indefinite"/>
-      </use>
-      
-      <use href="#heart" fill="url(#animGrad1)" transform="scale(.135)">
-        <animateMotion dur="21s" begin="-6s" repeatCount="indefinite" rotate="auto"><mpath href="#orbitBig"/></animateMotion>
-        <animateTransform attributeName="transform" type="scale" additive="sum" 
-          values=".135;.16;.135" dur="3.2s" repeatCount="indefinite"/>
-      </use>
-      
-      <use href="#heart" fill="url(#animGrad2)" transform="scale(.15)">
-        <animateMotion dur="22s" begin="-8s" repeatCount="indefinite" rotate="auto"><mpath href="#orbitBig"/></animateMotion>
-        <animateTransform attributeName="transform" type="scale" additive="sum" 
-          values=".15;.18;.15" dur="2.9s" repeatCount="indefinite"/>
-      </use>
-      
-      <use href="#heart" fill="url(#animGrad3)" transform="scale(.12)">
-        <animateMotion dur="23s" begin="-10s" repeatCount="indefinite" rotate="auto"><mpath href="#orbitBig"/></animateMotion>
-        <animateTransform attributeName="transform" type="scale" additive="sum" 
-          values=".12;.14;.12" dur="3.1s" repeatCount="indefinite"/>
-      </use>
-      
-      <use href="#heart" fill="url(#animGrad1)" transform="scale(.135)">
-        <animateMotion dur="24s" begin="-12s" repeatCount="indefinite" rotate="auto"><mpath href="#orbitBig"/></animateMotion>
-        <animateTransform attributeName="transform" type="scale" additive="sum" 
-          values=".135;.16;.135" dur="3.3s" repeatCount="indefinite"/>
-      </use>
-      
-      <use href="#heart" fill="url(#animGrad2)" transform="scale(.15)">
-        <animateMotion dur="21s" begin="-14s" repeatCount="indefinite" rotate="auto"><mpath href="#orbitBig"/></animateMotion>
-        <animateTransform attributeName="transform" type="scale" additive="sum" 
-          values=".15;.18;.15" dur="2.7s" repeatCount="indefinite"/>
-      </use>
-      
-      <use href="#heart" fill="url(#animGrad3)" transform="scale(.12)">
-        <animateMotion dur="22s" begin="-16s" repeatCount="indefinite" rotate="auto"><mpath href="#orbitBig"/></animateMotion>
-        <animateTransform attributeName="transform" type="scale" additive="sum" 
-          values=".12;.14;.12" dur="3.4s" repeatCount="indefinite"/>
-      </use>
-      
-      <use href="#heart" fill="url(#animGrad1)" transform="scale(.135)">
-        <animateMotion dur="23s" begin="-18s" repeatCount="indefinite" rotate="auto"><mpath href="#orbitBig"/></animateMotion>
-        <animateTransform attributeName="transform" type="scale" additive="sum" 
-          values=".135;.16;.135" dur="2.6s" repeatCount="indefinite"/>
-      </use>
-    </g>
-
-    <!-- MIDDLE RING (8 hearts) -->
-    <g>
-      <use href="#heart" fill="url(#animGrad2)" transform="scale(.135)">
-        <animateMotion dur="18s" repeatCount="indefinite" rotate="auto"><mpath href="#orbitMid"/></animateMotion>
-        <animateTransform attributeName="transform" type="scale" additive="sum" 
-          values=".135;.16;.135" dur="2.8s" repeatCount="indefinite"/>
-      </use>
-      
-      <use href="#heart" fill="url(#animGrad3)" transform="scale(.15)">
-        <animateMotion dur="19s" begin="-2s" repeatCount="indefinite" rotate="auto"><mpath href="#orbitMid"/></animateMotion>
-        <animateTransform attributeName="transform" type="scale" additive="sum" 
-          values=".15;.18;.15" dur="3.2s" repeatCount="indefinite"/>
-      </use>
-      
-      <use href="#heart" fill="url(#animGrad1)" transform="scale(.12)">
-        <animateMotion dur="17s" begin="-4s" repeatCount="indefinite" rotate="auto"><mpath href="#orbitMid"/></animateMotion>
-        <animateTransform attributeName="transform" type="scale" additive="sum" 
-          values=".12;.14;.12" dur="2.9s" repeatCount="indefinite"/>
-      </use>
-      
-      <use href="#heart" fill="url(#animGrad2)" transform="scale(.135)">
-        <animateMotion dur="18s" begin="-6s" repeatCount="indefinite" rotate="auto"><mpath href="#orbitMid"/></animateMotion>
-        <animateTransform attributeName="transform" type="scale" additive="sum" 
-          values=".135;.16;.135" dur="3.1s" repeatCount="indefinite"/>
-      </use>
-      
-      <use href="#heart" fill="url(#animGrad3)" transform="scale(.15)">
-        <animateMotion dur="19s" begin="-8s" repeatCount="indefinite" rotate="auto"><mpath href="#orbitMid"/></animateMotion>
-        <animateTransform attributeName="transform" type="scale" additive="sum" 
-          values=".15;.18;.15" dur="2.7s" repeatCount="indefinite"/>
-      </use>
-      
-      <use href="#heart" fill="url(#animGrad1)" transform="scale(.12)">
-        <animateMotion dur="17s" begin="-10s" repeatCount="indefinite" rotate="auto"><mpath href="#orbitMid"/></animateMotion>
-        <animateTransform attributeName="transform" type="scale" additive="sum" 
-          values=".12;.14;.12" dur="3.3s" repeatCount="indefinite"/>
-      </use>
-      
-      <use href="#heart" fill="url(#animGrad2)" transform="scale(.135)">
-        <animateMotion dur="18s" begin="-12s" repeatCount="indefinite" rotate="auto"><mpath href="#orbitMid"/></animateMotion>
-        <animateTransform attributeName="transform" type="scale" additive="sum" 
-          values=".135;.16;.135" dur="2.6s" repeatCount="indefinite"/>
-      </use>
-      
-      <use href="#heart" fill="url(#animGrad3)" transform="scale(.15)">
-        <animateMotion dur="19s" begin="-14s" repeatCount="indefinite" rotate="auto"><mpath href="#orbitMid"/></animateMotion>
-        <animateTransform attributeName="transform" type="scale" additive="sum" 
-          values=".15;.18;.15" dur="3.4s" repeatCount="indefinite"/>
-      </use>
-    </g>
-
-    <!-- INNER RING (6 hearts) -->
-    <g>
-      <use href="#heart" fill="url(#animGrad3)" transform="scale(.12)">
-        <animateMotion dur="13s" repeatCount="indefinite" rotate="auto"><mpath href="#orbitSmall"/></animateMotion>
-        <animateTransform attributeName="transform" type="scale" additive="sum" 
-          values=".12;.15;.12" dur="2.5s" repeatCount="indefinite"/>
-      </use>
-      
-      <use href="#heart" fill="url(#animGrad1)" transform="scale(.135)">
-        <animateMotion dur="12s" begin="-2s" repeatCount="indefinite" rotate="auto"><mpath href="#orbitSmall"/></animateMotion>
-        <animateTransform attributeName="transform" type="scale" additive="sum" 
-          values=".135;.16;.135" dur="2.8s" repeatCount="indefinite"/>
-      </use>
-      
-      <use href="#heart" fill="url(#animGrad2)" transform="scale(.15)">
-        <animateMotion dur="11s" begin="-4s" repeatCount="indefinite" rotate="auto"><mpath href="#orbitSmall"/></animateMotion>
-        <animateTransform attributeName="transform" type="scale" additive="sum" 
-          values=".15;.18;.15" dur="2.6s" repeatCount="indefinite"/>
-      </use>
-      
-      <use href="#heart" fill="url(#animGrad3)" transform="scale(.12)">
-        <animateMotion dur="13s" begin="-6s" repeatCount="indefinite" rotate="auto"><mpath href="#orbitSmall"/></animateMotion>
-        <animateTransform attributeName="transform" type="scale" additive="sum" 
-          values=".12;.15;.12" dur="2.9s" repeatCount="indefinite"/>
-      </use>
-      
-      <use href="#heart" fill="url(#animGrad1)" transform="scale(.135)">
-        <animateMotion dur="12s" begin="-8s" repeatCount="indefinite" rotate="auto"><mpath href="#orbitSmall"/></animateMotion>
-        <animateTransform attributeName="transform" type="scale" additive="sum" 
-          values=".135;.16;.135" dur="2.7s" repeatCount="indefinite"/>
-      </use>
-      
-      <use href="#heart" fill="url(#animGrad2)" transform="scale(.15)">
-        <animateMotion dur="11s" begin="-10s" repeatCount="indefinite" rotate="auto"><mpath href="#orbitSmall"/></animateMotion>
-        <animateTransform attributeName="transform" type="scale" additive="sum" 
-          values=".15;.18;.15" dur="3.1s" repeatCount="indefinite"/>
-      </use>
-    </g>
-  </g>
-</svg>
-      </div>
-
-      <!-- Metrics + Trend Card -->
-      <div class="card">
-        <h3 class="metric-title">Metrics Dashboard</h3>
-        <div style="display:grid;gap:12px">
-          <div>
-            <div style="display:flex;justify-content:space-between;margin-bottom:6px"><span>Hạnh phúc</span><span class="mono">100%</span></div>
-            <div class="bar"><span style="background:#ec4899;width:100%"></span></div>
-          </div>
-          <div>
-            <div style="display:flex;justify-content:space-between;margin-bottom:6px"><span>Thành công</span><span class="mono">100%</span></div>
-            <div class="bar"><span style="background:#8b5cf6;width:100%"></span></div>
-          </div>
-          <div>
-            <div style="display:flex;justify-content:space-between;margin-bottom:6px"><span>Yêu thương</span><span class="mono">100%</span></div>
-            <div class="bar"><span style="background:#f43f5e;width:100%"></span></div>
-          </div>
-          <div>
-            <div style="display:flex;justify-content:space-between;margin-bottom:6px"><span>Sức khỏe</span><span class="mono">100%</span></div>
-            <div class="bar"><span style="background:#06b6d4;width:100%"></span></div>
-          </div>
-          <div>
-            <div style="display:flex;justify-content:space-between;margin-bottom:6px"><span>May mắn</span><span class="mono">100%</span></div>
-            <div class="bar"><span style="background:#10b981;width:100%"></span></div>
-          </div>
-        </div>
-
-        <h3 class="trend-title" style="margin-top:18px">Appreciation Trend</h3>
-        <svg viewBox="0 0 320 160" style="width:100%;height:160px;background:rgba(255,255,255,.06);border-radius:12px">
-          <line x1="32" y1="16" x2="32" y2="144" stroke="rgba(255,255,255,.35)"/>
-          <line x1="32" y1="144" x2="304" y2="144" stroke="rgba(255,255,255,.35)"/>
-          <polyline fill="none" stroke="#ec4899" stroke-width="3" points="
-            32,96  68,72  104,84  140,60  176,32  212,48  248,40  284,36
-          "/>
-          <g fill="#fb7185">
-            <circle cx="32" cy="96" r="4"/>
-            <circle cx="68" cy="72" r="4"/>
-            <circle cx="104" cy="84" r="4"/>
-            <circle cx="140" cy="60" r="4"/>
-            <circle cx="176" cy="32" r="4"/>
-            <circle cx="212" cy="48" r="4"/>
-            <circle cx="248" cy="40" r="4"/>
-            <circle cx="284" cy="36" r="4"/>
-          </g>
-        </svg>
-      </div>
-    </div>
-
-    <div class="footer">
-      <p style="font-size:24px;margin:0 0 8px">Chúc em luôn tươi trẻ, xinh đẹp, thành công và luôn vui vẻ!</p>
-      <p class="mono" style="margin:0">Algorithm: Spread Love | Status: Active ✓</p>
-    </div>
-  </div>
-
-  <script>
-    const root = document.getElementById('particles');
-    const N = 35;
-    for(let i=0;i<N;i++){
-      const d = document.createElement('div');
-      d.className='p';
-      const size = Math.random()*3+1;
-      d.style.width=d.style.height=size+'px';
-      d.style.left = (Math.random()*100)+'vw';
-      d.style.top  = (Math.random()*100)+'vh';
-      d.style.animation = `float ${3+Math.random()*6}s ease-in-out ${Math.random()*-5}s infinite`;
-      d.style.opacity = (0.3+Math.random()*0.5).toFixed(2);
-      root.appendChild(d);
+  // 3 Circumstellar Disks
+  disks: [
+    {
+      // Inner disk — closest to heart
+      radiusInner: 8,
+      radiusOuter: 13,
+      tiltX: 0.15,
+      yOffset: -6.5,
+      speed: 0.25,
+      direction: 1,
+      particleCount: 300,
+      texts: [
+        '♡ Yêu em ♡', 'Mãi bên nhau', '♡ My Love ♡', 'Hạnh phúc',
+        '♡ Forever ♡', 'Be mine', 'Trọn đời', '♡ Anh yêu em ♡',
+        'Nhớ em', 'Tình yêu', '♡ Sweetheart ♡', 'Yêu thương',
+      ],
+      textSize: 1.4,
+      textColor: '#ffb6d5',
+      dustColor: 0xff69b4,
+      dustOpacity: 0.5,
+    },
+    {
+      // Middle disk
+      radiusInner: 11.5,
+      radiusOuter: 15,
+      tiltX: 0.12,
+      yOffset: -7.5,
+      speed: 0.16,
+      direction: -1,
+      particleCount: 500,
+      texts: [
+        '★ Happy Valentine ★', 'Anh yêu em nhiều lắm', '❤ Together forever ❤',
+        'Trọn đời bên nhau', '★ Tình yêu vĩnh cửu ★', 'Muôn đời không đổi',
+        'Em là tất cả', '❤ I love you ❤', 'Mãi mãi yêu em',
+        'Hạnh phúc bên nhau', '★ Ngọt ngào ★', 'You & Me forever',
+        'Trái tim anh', '❤ Nắm tay nhau ❤', 'Đôi ta mãi mãi',
+      ],
+      textSize: 1.5,
+      textColor: '#ff82b4',
+      dustColor: 0xda70d6,
+      dustOpacity: 0.35,
+    },
+    {
+      // Outer disk — largest ring
+      radiusInner: 15.5,
+      radiusOuter: 20,
+      tiltX: 0.08,
+      yOffset: -8.5,
+      speed: 0.1,
+      direction: 1,
+      particleCount: 700,
+      texts: [
+        '✦ Em là ánh sáng của đời anh ✦', 'Yêu thương không bao giờ phai',
+        '✦ Nhớ nhung ✦', 'Trái tim này thuộc về em', '✦ Mộng mơ ✦',
+        'Hy vọng ngày mai bên nhau', '✦ Hạnh phúc là có em ✦',
+        'Mãi mãi và mãi mãi', '✦ Sao trời dẫn lối ✦',
+        'Tình yêu đích thực', '✦ Vĩnh hằng ✦', 'Cùng nhau đi hết cuộc đời',
+        'Con tim chỉ thuộc em', '✦ Lời hứa trăm năm ✦',
+        'Ngàn năm vẫn yêu', '✦ Giấc mơ có em ✦', 'Bên nhau trọn kiếp',
+        '✦ Ánh trăng tình yêu ✦', 'Đẹp nhất là em',
+      ],
+      textSize: 1.1,
+      textColor: '#c87ab8',
+      dustColor: 0xc71585,
+      dustOpacity: 0.25,
     }
-  </script>
+  ],
+
+  fallingCount: 120,
+  autoRotateSpeed: 0.15,
+
+  colors: [
+    0xff69b4, 0xff1493, 0xda70d6, 0xff6ec7,
+    0xf778a1, 0xe75480, 0xff85a2, 0xc71585,
+    0xff5ba7, 0xdb7093
+  ],
+};
+
+// ============================================================
+// THREE.JS SETUP
+// ============================================================
+const scene = new THREE.Scene();
+scene.fog = new THREE.FogExp2(0x000000, 0.008);
+
+const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+camera.position.set(0, 5, 38);
+camera.lookAt(0, -2, 0);
+
+const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.setClearColor(0x000000, 1);
+document.body.appendChild(renderer.domElement);
+
+// ============================================================
+// HEART PARAMETRIC (3D)
+// ============================================================
+function heartX(t) { return 16 * Math.pow(Math.sin(t), 3); }
+function heartY(t) { return 13 * Math.cos(t) - 5 * Math.cos(2*t) - 2 * Math.cos(3*t) - Math.cos(4*t); }
+
+function getHeartPoint(scale) {
+  const t = Math.random() * Math.PI * 2;
+  const fill = Math.pow(Math.random(), 0.5);
+  const x = heartX(t) * fill;
+  const y = heartY(t) * fill;
+  const dist = Math.sqrt(x*x + y*y);
+  const maxDist = 17;
+  const zRange = Math.sqrt(Math.max(0, 1 - (dist/maxDist) * (dist/maxDist))) * 3.5;
+  const z = (Math.random() - 0.5) * 2 * zRange;
+  return new THREE.Vector3(x * scale * 0.065, y * scale * 0.065, z * scale * 0.065);
+}
+
+// ============================================================
+// MAIN GROUP
+// ============================================================
+const heartGroup = new THREE.Group();
+scene.add(heartGroup);
+
+// ============================================================
+// HEART PARTICLES
+// ============================================================
+const heartGeometry = new THREE.BufferGeometry();
+const heartPositions = new Float32Array(CONFIG.heartParticles * 3);
+const heartColors = new Float32Array(CONFIG.heartParticles * 3);
+const heartSizes = new Float32Array(CONFIG.heartParticles);
+
+for (let i = 0; i < CONFIG.heartParticles; i++) {
+  const p = getHeartPoint(CONFIG.heartScale);
+  heartPositions[i*3] = p.x;
+  heartPositions[i*3+1] = p.y;
+  heartPositions[i*3+2] = p.z;
+
+  const color = new THREE.Color(CONFIG.colors[Math.floor(Math.random() * CONFIG.colors.length)]);
+  heartColors[i*3] = color.r;
+  heartColors[i*3+1] = color.g;
+  heartColors[i*3+2] = color.b;
+
+  heartSizes[i] = CONFIG.particleSizeMin + Math.random() * (CONFIG.particleSizeMax - CONFIG.particleSizeMin);
+}
+
+heartGeometry.setAttribute('position', new THREE.BufferAttribute(heartPositions, 3));
+heartGeometry.setAttribute('color', new THREE.BufferAttribute(heartColors, 3));
+heartGeometry.setAttribute('size', new THREE.BufferAttribute(heartSizes, 1));
+
+const heartMaterial = new THREE.ShaderMaterial({
+  uniforms: {
+    uTime: { value: 0 },
+    uPulse: { value: 1.0 },
+    uPixelRatio: { value: renderer.getPixelRatio() },
+  },
+  vertexShader: `
+    attribute float size;
+    attribute vec3 color;
+    varying vec3 vColor;
+    varying float vAlpha;
+    uniform float uTime;
+    uniform float uPulse;
+    uniform float uPixelRatio;
+    float hash(float n) { return fract(sin(n) * 43758.5453123); }
+    void main() {
+      vColor = color;
+      float phase = hash(float(gl_VertexID)) * 6.2831;
+      float speed = 1.5 + hash(float(gl_VertexID) + 100.0) * 3.0;
+      vAlpha = 0.35 + 0.65 * (0.5 + 0.5 * sin(uTime * speed + phase));
+      vec3 pos = position;
+      float driftAmt = 0.08;
+      pos.x += sin(uTime * (0.5 + hash(float(gl_VertexID)+1.0)) + hash(float(gl_VertexID)+2.0) * 6.28) * driftAmt;
+      pos.y += cos(uTime * (0.4 + hash(float(gl_VertexID)+3.0)) + hash(float(gl_VertexID)+4.0) * 6.28) * driftAmt;
+      pos.z += sin(uTime * (0.3 + hash(float(gl_VertexID)+5.0)) + hash(float(gl_VertexID)+6.0) * 6.28) * driftAmt;
+      pos *= uPulse;
+      vec4 mvPosition = modelViewMatrix * vec4(pos, 1.0);
+      gl_PointSize = size * uPixelRatio * 120.0 / -mvPosition.z;
+      gl_Position = projectionMatrix * mvPosition;
+    }
+  `,
+  fragmentShader: `
+    varying vec3 vColor;
+    varying float vAlpha;
+    void main() {
+      float d = length(gl_PointCoord - vec2(0.5));
+      if (d > 0.5) discard;
+      float glow = 1.0 - smoothstep(0.0, 0.5, d);
+      glow = pow(glow, 1.5);
+      gl_FragColor = vec4(vColor * glow * 1.5, glow * vAlpha);
+    }
+  `,
+  transparent: true,
+  blending: THREE.AdditiveBlending,
+  depthWrite: false,
+});
+
+const heartPoints = new THREE.Points(heartGeometry, heartMaterial);
+heartGroup.add(heartPoints);
+
+// ============================================================
+// CIRCUMSTELLAR DISK — DUST PARTICLES
+// ============================================================
+function createDiskDust(disk) {
+  const count = disk.particleCount;
+  const geo = new THREE.BufferGeometry();
+  const pos = new Float32Array(count * 3);
+  const sizes = new Float32Array(count);
+  const cols = new Float32Array(count * 3);
+  const baseColor = new THREE.Color(disk.dustColor);
+
+  for (let i = 0; i < count; i++) {
+    const angle = Math.random() * Math.PI * 2;
+    const r = disk.radiusInner + Math.random() * (disk.radiusOuter - disk.radiusInner);
+    // Flatten into disk shape with slight vertical scatter
+    const scatter = (Math.random() - 0.5) * 0.6;
+    pos[i*3]     = Math.cos(angle) * r;
+    pos[i*3+1]   = scatter;
+    pos[i*3+2]   = Math.sin(angle) * r;
+
+    sizes[i] = 0.02 + Math.random() * 0.08;
+
+    // Color variation
+    const variation = 0.7 + Math.random() * 0.3;
+    cols[i*3]   = baseColor.r * variation;
+    cols[i*3+1] = baseColor.g * variation;
+    cols[i*3+2] = baseColor.b * variation;
+  }
+
+  geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+  geo.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
+  geo.setAttribute('color', new THREE.BufferAttribute(cols, 3));
+
+  const mat = new THREE.ShaderMaterial({
+    uniforms: {
+      uTime: { value: 0 },
+      uOpacity: { value: disk.dustOpacity },
+      uPixelRatio: { value: renderer.getPixelRatio() },
+    },
+    vertexShader: `
+      attribute float size;
+      attribute vec3 color;
+      varying vec3 vColor;
+      varying float vAlpha;
+      uniform float uTime;
+      uniform float uPixelRatio;
+      float hash(float n) { return fract(sin(n) * 43758.5453); }
+      void main() {
+        vColor = color;
+        float phase = hash(float(gl_VertexID)) * 6.28;
+        vAlpha = 0.4 + 0.6 * (0.5 + 0.5 * sin(uTime * (1.0 + hash(float(gl_VertexID)+10.0)*2.0) + phase));
+        vec4 mv = modelViewMatrix * vec4(position, 1.0);
+        gl_PointSize = size * uPixelRatio * 100.0 / -mv.z;
+        gl_Position = projectionMatrix * mv;
+      }
+    `,
+    fragmentShader: `
+      varying vec3 vColor;
+      varying float vAlpha;
+      uniform float uOpacity;
+      void main() {
+        float d = length(gl_PointCoord - vec2(0.5));
+        if (d > 0.5) discard;
+        float glow = 1.0 - smoothstep(0.0, 0.5, d);
+        glow = pow(glow, 2.0);
+        gl_FragColor = vec4(vColor * 1.3, glow * vAlpha * uOpacity);
+      }
+    `,
+    transparent: true,
+    blending: THREE.AdditiveBlending,
+    depthWrite: false,
+  });
+
+  return new THREE.Points(geo, mat);
+}
+
+// ============================================================
+// CIRCUMSTELLAR DISK — TEXT SPRITES
+// ============================================================
+function createTextTexture(text, fontSize, color, fontFamily) {
+  const c = document.createElement('canvas');
+  const ctx = c.getContext('2d');
+  const scale = 6; // Higher res
+  ctx.font = `bold ${fontSize * scale}px ${fontFamily}`;
+  const metrics = ctx.measureText(text);
+  const w = Math.ceil(metrics.width) + 40;
+  const h = Math.ceil(fontSize * scale * 2);
+  c.width = w;
+  c.height = h;
+
+  // Glow effect
+  ctx.font = `bold ${fontSize * scale}px ${fontFamily}`;
+  ctx.textBaseline = 'middle';
+  ctx.textAlign = 'center';
+
+  // Outer glow
+  ctx.shadowColor = color;
+  ctx.shadowBlur = 15 * scale;
+  ctx.fillStyle = color;
+  ctx.fillText(text, w/2, h/2);
+
+  // Crisp text on top
+  ctx.shadowBlur = 0;
+  ctx.fillStyle = color;
+  ctx.fillText(text, w/2, h/2);
+
+  const tex = new THREE.CanvasTexture(c);
+  tex.needsUpdate = true;
+  return { texture: tex, aspect: w / h };
+}
+
+function createDiskTexts(disk) {
+  const group = new THREE.Group();
+  const texts = disk.texts;
+  const count = texts.length;
+  const angleStep = (Math.PI * 2) / count;
+
+  for (let i = 0; i < count; i++) {
+    const { texture, aspect } = createTextTexture(
+      texts[i], 36, disk.textColor, "'Dancing Script', 'Great Vibes', cursive"
+    );
+
+    const spriteMat = new THREE.SpriteMaterial({
+      map: texture,
+      transparent: true,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false,
+      opacity: 0.92,
+    });
+    const sprite = new THREE.Sprite(spriteMat);
+
+    const angle = angleStep * i;
+    const r = disk.radiusInner + (disk.radiusOuter - disk.radiusInner) * 0.5;
+    // Slight radius variation for natural feel
+    const rVariation = r + (Math.random() - 0.5) * (disk.radiusOuter - disk.radiusInner) * 0.35;
+
+    sprite.position.set(
+      Math.cos(angle) * rVariation,
+      (Math.random() - 0.5) * 0.3,
+      Math.sin(angle) * rVariation
+    );
+
+    const s = disk.textSize;
+    sprite.scale.set(s * aspect * 0.7, s * 0.7, 1);
+    group.add(sprite);
+  }
+
+  return group;
+}
+
+// ============================================================
+// BUILD ALL 3 DISKS
+// ============================================================
+const diskGroups = [];
+const diskDustMaterials = [];
+
+CONFIG.disks.forEach((diskConf, idx) => {
+  const diskGroup = new THREE.Group();
+  diskGroup.position.y = diskConf.yOffset;
+  diskGroup.rotation.x = diskConf.tiltX;
+
+  // Dust particles
+  const dust = createDiskDust(diskConf);
+  diskGroup.add(dust);
+  diskDustMaterials.push(dust.material);
+
+  // Text sprites
+  const textGroup = createDiskTexts(diskConf);
+  diskGroup.add(textGroup);
+
+  // Glow ring (torus for rim light)
+  const ringRadius = (diskConf.radiusInner + diskConf.radiusOuter) / 2;
+  const tubeRadius = (diskConf.radiusOuter - diskConf.radiusInner) / 2;
+  const torusGeo = new THREE.TorusGeometry(ringRadius, tubeRadius, 8, 80);
+  const torusMat = new THREE.ShaderMaterial({
+    uniforms: {
+      uColor: { value: new THREE.Color(diskConf.dustColor) },
+      uTime: { value: 0 },
+    },
+    vertexShader: `
+      varying vec3 vNormal;
+      varying vec3 vPos;
+      void main() {
+        vNormal = normalize(normalMatrix * normal);
+        vPos = position;
+        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+      }
+    `,
+    fragmentShader: `
+      uniform vec3 uColor;
+      uniform float uTime;
+      varying vec3 vNormal;
+      varying vec3 vPos;
+      void main() {
+        float rim = 1.0 - abs(dot(vNormal, vec3(0.0, 1.0, 0.0)));
+        rim = pow(rim, 3.0);
+        float shimmer = 0.7 + 0.3 * sin(vPos.x * 2.0 + vPos.z * 2.0 + uTime * 1.5);
+        gl_FragColor = vec4(uColor * shimmer, rim * 0.06);
+      }
+    `,
+    transparent: true,
+    blending: THREE.AdditiveBlending,
+    side: THREE.DoubleSide,
+    depthWrite: false,
+  });
+  const torusMesh = new THREE.Mesh(torusGeo, torusMat);
+  torusMesh.rotation.x = Math.PI / 2;
+  diskGroup.add(torusMesh);
+
+  diskGroup.userData = {
+    speed: diskConf.speed,
+    direction: diskConf.direction,
+    torusMat: torusMat,
+  };
+
+  heartGroup.add(diskGroup);
+  diskGroups.push(diskGroup);
+});
+
+// ============================================================
+// HEART AMBIENT GLOW
+// ============================================================
+const glowGeo = new THREE.SphereGeometry(9, 32, 32);
+const glowMat = new THREE.ShaderMaterial({
+  uniforms: {
+    uColor: { value: new THREE.Color(0xff1493) },
+    uTime: { value: 0 },
+  },
+  vertexShader: `
+    varying vec3 vNormal;
+    void main() {
+      vNormal = normalize(normalMatrix * normal);
+      gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+    }
+  `,
+  fragmentShader: `
+    uniform vec3 uColor;
+    uniform float uTime;
+    varying vec3 vNormal;
+    void main() {
+      float intensity = pow(0.65 - dot(vNormal, vec3(0.0, 0.0, 1.0)), 3.0);
+      float pulse = 0.5 + 0.5 * sin(uTime * 2.0);
+      gl_FragColor = vec4(uColor, intensity * 0.1 * (0.8 + 0.2 * pulse));
+    }
+  `,
+  transparent: true,
+  blending: THREE.AdditiveBlending,
+  side: THREE.BackSide,
+  depthWrite: false,
+});
+heartGroup.add(new THREE.Mesh(glowGeo, glowMat));
+
+// ============================================================
+// BACKGROUND FALLING PARTICLES
+// ============================================================
+const bgCount = CONFIG.fallingCount;
+const bgGeo = new THREE.BufferGeometry();
+const bgPos = new Float32Array(bgCount * 3);
+const bgVel = new Float32Array(bgCount);
+const bgCols = new Float32Array(bgCount * 3);
+const bgSizes = new Float32Array(bgCount);
+
+for (let i = 0; i < bgCount; i++) {
+  bgPos[i*3]   = (Math.random() - 0.5) * 80;
+  bgPos[i*3+1] = (Math.random() - 0.5) * 60;
+  bgPos[i*3+2] = (Math.random() - 0.5) * 60;
+  bgVel[i] = 0.01 + Math.random() * 0.03;
+  const c = new THREE.Color(CONFIG.colors[Math.floor(Math.random() * CONFIG.colors.length)]);
+  bgCols[i*3] = c.r; bgCols[i*3+1] = c.g; bgCols[i*3+2] = c.b;
+  bgSizes[i] = 0.02 + Math.random() * 0.06;
+}
+
+bgGeo.setAttribute('position', new THREE.BufferAttribute(bgPos, 3));
+bgGeo.setAttribute('color', new THREE.BufferAttribute(bgCols, 3));
+bgGeo.setAttribute('size', new THREE.BufferAttribute(bgSizes, 1));
+
+const bgMat = new THREE.ShaderMaterial({
+  uniforms: { uPixelRatio: { value: renderer.getPixelRatio() } },
+  vertexShader: `
+    attribute float size;
+    attribute vec3 color;
+    varying vec3 vColor;
+    uniform float uPixelRatio;
+    void main() {
+      vColor = color;
+      vec4 mv = modelViewMatrix * vec4(position, 1.0);
+      gl_PointSize = size * uPixelRatio * 100.0 / -mv.z;
+      gl_Position = projectionMatrix * mv;
+    }
+  `,
+  fragmentShader: `
+    varying vec3 vColor;
+    void main() {
+      float d = length(gl_PointCoord - vec2(0.5));
+      if (d > 0.5) discard;
+      float glow = 1.0 - smoothstep(0.0, 0.5, d);
+      gl_FragColor = vec4(vColor, glow * 0.25);
+    }
+  `,
+  transparent: true,
+  blending: THREE.AdditiveBlending,
+  depthWrite: false,
+});
+scene.add(new THREE.Points(bgGeo, bgMat));
+
+// ============================================================
+// MOUSE / TOUCH INTERACTION
+// ============================================================
+let isDragging = false;
+let previousMouse = { x: 0, y: 0 };
+let targetRotationX = 0.25; // slight downward look default
+let targetRotationY = 0;
+let currentRotationX = 0.25;
+let currentRotationY = 0;
+let autoRotateAngle = 0;
+let lastInteraction = 0;
+
+function onPointerDown(e) {
+  isDragging = true;
+  const p = e.touches ? e.touches[0] : e;
+  previousMouse.x = p.clientX;
+  previousMouse.y = p.clientY;
+  lastInteraction = performance.now();
+}
+function onPointerMove(e) {
+  if (!isDragging) return;
+  e.preventDefault();
+  const p = e.touches ? e.touches[0] : e;
+  const dx = p.clientX - previousMouse.x;
+  const dy = p.clientY - previousMouse.y;
+  targetRotationY += dx * 0.008;
+  targetRotationX += dy * 0.006;
+  targetRotationX = Math.max(-Math.PI * 0.45, Math.min(Math.PI * 0.45, targetRotationX));
+  previousMouse.x = p.clientX;
+  previousMouse.y = p.clientY;
+  lastInteraction = performance.now();
+}
+function onPointerUp() { isDragging = false; }
+
+renderer.domElement.addEventListener('mousedown', onPointerDown);
+window.addEventListener('mousemove', onPointerMove);
+window.addEventListener('mouseup', onPointerUp);
+renderer.domElement.addEventListener('touchstart', onPointerDown, { passive: false });
+window.addEventListener('touchmove', onPointerMove, { passive: false });
+window.addEventListener('touchend', onPointerUp);
+
+renderer.domElement.addEventListener('wheel', (e) => {
+  e.preventDefault();
+  camera.position.z = Math.max(18, Math.min(60, camera.position.z + e.deltaY * 0.03));
+}, { passive: false });
+
+// ============================================================
+// PULSE
+// ============================================================
+function getPulse(t) {
+  const freq = (2 * Math.PI) / CONFIG.pulseSpeed;
+  const b1 = Math.max(0, Math.sin(t * freq));
+  const b2 = Math.max(0, Math.sin(t * freq - 0.6)) * 0.6;
+  return 1 + Math.max(b1, b2) * CONFIG.pulseMagnitude;
+}
+
+// ============================================================
+// ANIMATION LOOP
+// ============================================================
+const clock = new THREE.Clock();
+
+function animate() {
+  requestAnimationFrame(animate);
+  const elapsed = clock.getElapsedTime();
+  const dt = clock.getDelta();
+
+  // Auto-rotate
+  const timeSinceInteraction = (performance.now() - lastInteraction) / 1000;
+  if (timeSinceInteraction > 2.5) {
+    autoRotateAngle += CONFIG.autoRotateSpeed * dt;
+    targetRotationY = autoRotateAngle;
+  } else {
+    autoRotateAngle = targetRotationY;
+  }
+
+  // Smooth rotation
+  currentRotationX += (targetRotationX - currentRotationX) * 0.06;
+  currentRotationY += (targetRotationY - currentRotationY) * 0.06;
+  heartGroup.rotation.x = currentRotationX;
+  heartGroup.rotation.y = currentRotationY;
+
+  // Heart uniforms
+  heartMaterial.uniforms.uTime.value = elapsed;
+  heartMaterial.uniforms.uPulse.value = getPulse(elapsed);
+  glowMat.uniforms.uTime.value = elapsed;
+
+  // Rotate disks
+  diskGroups.forEach(dg => {
+    dg.rotation.y += dg.userData.speed * dg.userData.direction * dt;
+    dg.userData.torusMat.uniforms.uTime.value = elapsed;
+  });
+
+  // Update dust uniforms
+  diskDustMaterials.forEach(m => {
+    m.uniforms.uTime.value = elapsed;
+  });
+
+  // Falling bg particles
+  const positions = bgGeo.attributes.position.array;
+  for (let i = 0; i < bgCount; i++) {
+    positions[i*3+1] -= bgVel[i];
+    if (positions[i*3+1] < -30) {
+      positions[i*3+1] = 30;
+      positions[i*3] = (Math.random() - 0.5) * 80;
+      positions[i*3+2] = (Math.random() - 0.5) * 60;
+    }
+  }
+  bgGeo.attributes.position.needsUpdate = true;
+
+  renderer.render(scene, camera);
+}
+
+// ============================================================
+// RESIZE
+// ============================================================
+window.addEventListener('resize', () => {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  const pr = Math.min(window.devicePixelRatio, 2);
+  renderer.setPixelRatio(pr);
+  heartMaterial.uniforms.uPixelRatio.value = pr;
+  bgMat.uniforms.uPixelRatio.value = pr;
+  diskDustMaterials.forEach(m => { m.uniforms.uPixelRatio.value = pr; });
+});
+
+animate();
+
+// ============================================================
+// MUSIC CONTROL
+// ============================================================
+const bgMusic = document.getElementById('bgMusic');
+const musicControl = document.getElementById('musicControl');
+let isPlaying = false;
+
+// Try to autoplay when user first interacts
+let hasInteracted = false;
+function tryAutoplay() {
+  if (!hasInteracted) {
+    hasInteracted = true;
+    bgMusic.play().then(() => {
+      isPlaying = true;
+      musicControl.classList.add('playing');
+    }).catch(() => {
+      // Autoplay blocked, user needs to click
+      isPlaying = false;
+      musicControl.classList.remove('playing');
+    });
+  }
+}
+
+document.addEventListener('click', tryAutoplay, { once: true });
+document.addEventListener('touchstart', tryAutoplay, { once: true });
+
+musicControl.addEventListener('click', (e) => {
+  e.stopPropagation();
+  if (isPlaying) {
+    bgMusic.pause();
+    musicControl.textContent = '🔇';
+    musicControl.classList.remove('playing');
+  } else {
+    bgMusic.play();
+    musicControl.textContent = '🎵';
+    musicControl.classList.add('playing');
+  }
+  isPlaying = !isPlaying;
+});
+</script>
 </body>
 </html>

@@ -3,31 +3,66 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>💕 Trái Tim 3D Valentine</title>
-<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Great+Vibes&display=swap" rel="stylesheet">
+<title>🏮 TEAM DATA SCIENCE R&D MASAN — Chúc Mừng Năm Mới 2026 🏮</title>
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Great+Vibes&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   html, body {
     width: 100%; height: 100%;
     overflow: hidden;
-    background: #000;
+    background: radial-gradient(ellipse at 50% 40%, #3a0a0a 0%, #1e0000 45%, #0a0000 100%);
     cursor: grab;
     font-family: 'Dancing Script', cursive;
   }
   body:active { cursor: grabbing; }
   canvas { display: block; }
+
+  /* ===== Warm Tết ambient background glow ===== */
+  #ambientGlow {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 0;
+    background:
+      radial-gradient(ellipse 600px 500px at 10% 20%, rgba(180,30,0,0.12) 0%, transparent 70%),
+      radial-gradient(ellipse 500px 400px at 90% 15%, rgba(200,50,0,0.10) 0%, transparent 70%),
+      radial-gradient(ellipse 400px 350px at 85% 80%, rgba(180,40,0,0.08) 0%, transparent 70%),
+      radial-gradient(ellipse 450px 400px at 15% 85%, rgba(200,60,0,0.09) 0%, transparent 70%),
+      radial-gradient(ellipse 800px 600px at 50% 50%, rgba(120,10,0,0.15) 0%, transparent 60%);
+  }
+
+  /* Subtle vignette for depth */
+  #vignette {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 1;
+    background: radial-gradient(ellipse at 50% 45%, transparent 40%, rgba(5,0,0,0.5) 100%);
+  }
+
+  #petalCanvas {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 10;
+  }
+
   #hint {
     position: fixed;
     bottom: 24px;
     left: 50%;
     transform: translateX(-50%);
-    color: rgba(255,150,190,0.7);
+    color: rgba(255,215,0,0.7);
     font-family: 'Dancing Script', cursive;
-    font-size: 16px;
+    font-size: 15px;
     pointer-events: none;
-    animation: fadeHint 5s ease-in-out forwards;
-    text-shadow: 0 0 20px rgba(255,100,160,0.5);
+    animation: fadeHint 6s ease-in-out forwards;
+    text-shadow: 0 0 20px rgba(255,180,0,0.5);
     white-space: nowrap;
+    z-index: 20;
   }
   @keyframes fadeHint {
     0% { opacity: 0; transform: translateX(-50%) translateY(10px); }
@@ -35,203 +70,496 @@
     75% { opacity: 1; }
     100% { opacity: 0; }
   }
+
+  /* ===== Greeting header ===== */
+  #greeting {
+    position: fixed;
+    top: 4%;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    z-index: 20;
+    pointer-events: none;
+    width: 90%;
+  }
+  #greeting .team-name {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(14px, 2.8vw, 26px);
+    color: #ffd700;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    text-shadow: 0 0 20px rgba(255,215,0,0.5), 0 0 40px rgba(255,150,0,0.3);
+    opacity: 0;
+    animation: fadeInDown 1.2s ease forwards 0.3s;
+    margin-bottom: 6px;
+  }
+  #greeting h1 {
+    font-family: 'Great Vibes', 'Dancing Script', cursive;
+    font-size: clamp(26px, 5vw, 54px);
+    color: #ff3333;
+    text-shadow: 0 0 30px rgba(255,50,0,0.6), 0 0 60px rgba(255,200,0,0.3);
+    animation: glowText 3s ease-in-out infinite alternate;
+    opacity: 0;
+    animation: glowText 3s ease-in-out infinite alternate, fadeInDown 1.2s ease forwards 0.8s;
+  }
+  #greeting .sub {
+    font-family: 'Dancing Script', cursive;
+    font-size: clamp(13px, 2.2vw, 20px);
+    color: #ffb347;
+    margin-top: 6px;
+    text-shadow: 0 0 15px rgba(255,180,0,0.4);
+    opacity: 0;
+    animation: fadeInDown 1.2s ease forwards 1.4s;
+  }
+  @keyframes glowText {
+    0% { text-shadow: 0 0 30px rgba(255,50,0,0.6), 0 0 60px rgba(255,200,0,0.3); opacity:1; }
+    100% { text-shadow: 0 0 50px rgba(255,50,0,0.9), 0 0 80px rgba(255,220,0,0.5); opacity:1; }
+  }
+  @keyframes fadeInDown {
+    0% { opacity: 0; transform: translateY(-15px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+
   #musicControl {
     position: fixed;
-    top: 24px;
-    right: 24px;
-    width: 50px;
-    height: 50px;
-    background: rgba(255, 100, 160, 0.2);
-    border: 2px solid rgba(255, 150, 190, 0.5);
+    top: 20px;
+    right: 20px;
+    width: 48px;
+    height: 48px;
+    background: rgba(255, 180, 0, 0.15);
+    border: 2px solid rgba(255, 215, 0, 0.4);
     border-radius: 50%;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 24px;
+    font-size: 22px;
     transition: all 0.3s ease;
     backdrop-filter: blur(10px);
     z-index: 1000;
   }
   #musicControl:hover {
-    background: rgba(255, 100, 160, 0.4);
-    border-color: rgba(255, 150, 190, 0.8);
+    background: rgba(255, 180, 0, 0.35);
+    border-color: rgba(255, 215, 0, 0.8);
     transform: scale(1.1);
   }
   #musicControl.playing {
     animation: pulse 2s ease-in-out infinite;
   }
   @keyframes pulse {
-    0%, 100% { box-shadow: 0 0 20px rgba(255, 100, 160, 0.3); }
-    50% { box-shadow: 0 0 30px rgba(255, 100, 160, 0.6); }
+    0%, 100% { box-shadow: 0 0 15px rgba(255, 150, 0, 0.3); }
+    50% { box-shadow: 0 0 30px rgba(255, 150, 0, 0.6); }
   }
 </style>
 </head>
 <body>
-<div id="hint">✨ Kéo chuột để xoay trái tim ✨</div>
+
+<!-- Warm ambient background layers -->
+<div id="ambientGlow"></div>
+<div id="vignette"></div>
+
+<div id="greeting">
+  <div class="team-name">✦ Team Data Science R&D — Masan ✦</div>
+  <h1>🏮 Chúc Mừng Năm Mới 2026 🏮</h1>
+  <div class="sub">Vạn Sự Như Ý • An Khang Thịnh Vượng • Tấn Tài Tấn Lộc</div>
+</div>
+
+<div id="hint">✨ Kéo chuột để xoay đèn lồng • Cuộn để zoom ✨</div>
 <div id="musicControl" class="playing" title="Click để bật/tắt nhạc">🎵</div>
-<audio id="bgMusic" loop>
-  <source src="I Do.mp3" type="audio/mpeg">
+
+<canvas id="petalCanvas"></canvas>
+
+<audio id="bgMusic" loop autoplay>
+  <source src="van_su_nhu_y.mp3" type="audio/mpeg">
 </audio>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
 // ============================================================
-// CONFIG
+// CONFIG — ĐÈN LỒNG TẾT 2026 — TEAM DATA R&D MASAN
 // ============================================================
 const CONFIG = {
-  heartParticles: 10000,
-  heartScale: 10,
-  particleSizeMin: 0.06,
-  particleSizeMax: 0.22,
-  pulseSpeed: 1.2,
-  pulseMagnitude: 0.04,
+  lanternParticles: 12000,
+  lanternScale: 10,
+  particleSizeMin: 0.05,
+  particleSizeMax: 0.20,
+  pulseSpeed: 1.4,
+  pulseMagnitude: 0.035,
 
-  // 3 Circumstellar Disks
+  // Tassel particles
+  tasselParticles: 1500,
+
   disks: [
     {
-      // Inner disk — closest to heart
-      radiusInner: 8,
-      radiusOuter: 13,
-      tiltX: 0.15,
-      yOffset: -6.5,
-      speed: 0.25,
+      radiusInner: 7,
+      radiusOuter: 11,
+      tiltX: 0.12,
+      yOffset: -8,
+      speed: 0.22,
       direction: 1,
-      particleCount: 300,
+      particleCount: 350,
       texts: [
-        '♡ Yêu em ♡', 'Mãi bên nhau', '♡ My Love ♡', 'Hạnh phúc',
-        '♡ Forever ♡', 'Be mine', 'Trọn đời', '♡ Anh yêu em ♡',
-        'Nhớ em', 'Tình yêu', '♡ Sweetheart ♡', 'Yêu thương',
+        '🏮 Tân Xuân 🏮', 'Phúc Lộc Thọ', '🌸 Vạn Sự Như Ý 🌸', 'An Khang',
+        '🏮 Phát Tài 🏮', 'Data Science', 'Hạnh Phúc', '🌸 Bình An 🌸',
+        'May Mắn', 'Masan Team', '🏮 Đắc Lộc 🏮', 'Data Science',
       ],
-      textSize: 1.4,
-      textColor: '#ffb6d5',
-      dustColor: 0xff69b4,
-      dustOpacity: 0.5,
+      textSize: 1.3,
+      textColor: '#ffd700',
+      dustColor: 0xffd700,
+      dustOpacity: 0.45,
     },
     {
-      // Middle disk
-      radiusInner: 11.5,
-      radiusOuter: 15,
-      tiltX: 0.12,
-      yOffset: -7.5,
-      speed: 0.16,
+      radiusInner: 10,
+      radiusOuter: 14,
+      tiltX: 0.10,
+      yOffset: -9,
+      speed: 0.14,
       direction: -1,
       particleCount: 500,
       texts: [
-        '★ Happy Valentine ★', 'Anh yêu em nhiều lắm', '❤ Together forever ❤',
-        'Trọn đời bên nhau', '★ Tình yêu vĩnh cửu ★', 'Muôn đời không đổi',
-        'Em là tất cả', '❤ I love you ❤', 'Mãi mãi yêu em',
-        'Hạnh phúc bên nhau', '★ Ngọt ngào ★', 'You & Me forever',
-        'Trái tim anh', '❤ Nắm tay nhau ❤', 'Đôi ta mãi mãi',
+        '★ Chúc Mừng Năm Mới 2026 ★', 'Team Data Science R&D',
+        '❤ An Khang Thịnh Vượng ❤', 'Phúc lộc đầy nhà',
+        '★ Tài lộc dồi dào ★', 'Sức khỏe dồi dào',
+        'Gia đình hạnh phúc', '❤ Xuân sang phú quý ❤',
+        'Data Science phát tài', 'Vạn sự hanh thông',
+        '★ Cung chúc tân xuân ★', 'R&D vươn tầm cao mới',
+        'Tết đến xuân về', '❤ Masan thịnh vượng ❤',
       ],
-      textSize: 1.5,
-      textColor: '#ff82b4',
-      dustColor: 0xda70d6,
+      textSize: 1.4,
+      textColor: '#ff5533',
+      dustColor: 0xff4500,
       dustOpacity: 0.35,
     },
     {
-      // Outer disk — largest ring
-      radiusInner: 15.5,
-      radiusOuter: 20,
-      tiltX: 0.08,
-      yOffset: -8.5,
-      speed: 0.1,
+      radiusInner: 14,
+      radiusOuter: 19,
+      tiltX: 0.07,
+      yOffset: -10,
+      speed: 0.09,
       direction: 1,
-      particleCount: 700,
+      particleCount: 650,
       texts: [
-        '✦ Em là ánh sáng của đời anh ✦', 'Yêu thương không bao giờ phai',
-        '✦ Nhớ nhung ✦', 'Trái tim này thuộc về em', '✦ Mộng mơ ✦',
-        'Hy vọng ngày mai bên nhau', '✦ Hạnh phúc là có em ✦',
-        'Mãi mãi và mãi mãi', '✦ Sao trời dẫn lối ✦',
-        'Tình yêu đích thực', '✦ Vĩnh hằng ✦', 'Cùng nhau đi hết cuộc đời',
-        'Con tim chỉ thuộc em', '✦ Lời hứa trăm năm ✦',
-        'Ngàn năm vẫn yêu', '✦ Giấc mơ có em ✦', 'Bên nhau trọn kiếp',
-        '✦ Ánh trăng tình yêu ✦', 'Đẹp nhất là em',
+        '✦ Năm mới vạn sự như ý ✦', 'Xuân sang hoa nở rộn ràng',
+        '✦ Team Data Science R&D chúc Tết an lành ✦', 'Gia đình sum họp ấm áp',
+        '✦ Mùa xuân hạnh phúc ✦', 'An khang thịnh vượng quanh năm',
+        '✦ Masan — Data Science vươn xa ✦', 'Lộc trời ban xuống muôn nhà',
+        '✦ Sức khỏe bình an ✦', 'Công danh rạng rỡ năm mới',
+        '✦ Đón xuân phát tài ✦', 'Hoa mai vàng khoe sắc',
+        'Data Science driven — Năm mới rực rỡ', '✦ Chúc Tết vạn lộc ✦',
+        'Niềm vui năm mới', '✦ Xuân về tết đến ✦', 'Bình an mỗi ngày',
+        '✦ Phúc lộc song toàn ✦', 'Data Science R&D — Rạng ngời 2026',
       ],
-      textSize: 1.1,
-      textColor: '#c87ab8',
-      dustColor: 0xc71585,
-      dustOpacity: 0.25,
+      textSize: 1.05,
+      textColor: '#ffb347',
+      dustColor: 0xcc3300,
+      dustOpacity: 0.22,
     }
   ],
 
-  fallingCount: 120,
-  autoRotateSpeed: 0.15,
+  fallingCount: 100,
+  autoRotateSpeed: 0.18,
 
+  // Đỏ đậm, vàng kim, cam — tông đèn lồng
   colors: [
-    0xff69b4, 0xff1493, 0xda70d6, 0xff6ec7,
-    0xf778a1, 0xe75480, 0xff85a2, 0xc71585,
-    0xff5ba7, 0xdb7093
+    0xff0000, 0xdd0000, 0xbb0000, 0xff2200,
+    0xff4400, 0xff6600, 0xffd700, 0xffaa00,
+    0xee3300, 0xcc1100,
+  ],
+  // Dải màu vàng cho khung đèn
+  frameColors: [
+    0xffd700, 0xffcc00, 0xffb800, 0xeeb422,
   ],
 };
+
+// ============================================================
+// MƯA HOA MAI RƠI
+// ============================================================
+(function() {
+  const canvas = document.getElementById('petalCanvas');
+  const ctx = canvas.getContext('2d');
+  let W, H;
+  function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
+  resize();
+  window.addEventListener('resize', resize);
+
+  class Petal {
+    constructor() { this.reset(true); }
+    reset(init) {
+      this.x = Math.random() * W;
+      this.y = init ? Math.random() * -H : -20 - Math.random() * 80;
+      this.size = 7 + Math.random() * 13;
+      this.speedY = 0.4 + Math.random() * 1.3;
+      this.speedX = (Math.random() - 0.5) * 0.7;
+      this.rot = Math.random() * Math.PI * 2;
+      this.rotSpd = (Math.random() - 0.5) * 0.035;
+      this.wobbleA = 0.4 + Math.random() * 1.2;
+      this.wobbleS = 0.008 + Math.random() * 0.018;
+      this.wobbleP = Math.random() * Math.PI * 2;
+      this.alpha = 0.45 + Math.random() * 0.5;
+      const h = 38 + Math.random() * 24;
+      const s = 80 + Math.random() * 20;
+      const l = 52 + Math.random() * 28;
+      this.color = `hsla(${h},${s}%,${l}%,${this.alpha})`;
+      this.centerColor = `rgba(170,95,0,${this.alpha * 0.85})`;
+      this.stamenColor = `rgba(195,115,0,${this.alpha * 0.75})`;
+      this.type = Math.floor(Math.random() * 3);
+      this.t = Math.random() * 1000;
+    }
+    update() {
+      this.t++;
+      this.y += this.speedY;
+      this.x += this.speedX + Math.sin(this.t * this.wobbleS + this.wobbleP) * this.wobbleA;
+      this.rot += this.rotSpd;
+      if (this.y > H + 30 || this.x < -30 || this.x > W + 30) this.reset(false);
+    }
+    draw() {
+      ctx.save();
+      ctx.translate(this.x, this.y);
+      ctx.rotate(this.rot);
+      ctx.globalAlpha = this.alpha;
+      if (this.type === 0) this.drawFlower();
+      else if (this.type === 1) this.drawPetal();
+      else this.drawBud();
+      ctx.restore();
+    }
+    drawFlower() {
+      const s = this.size, r = s * 0.45;
+      for (let i = 0; i < 5; i++) {
+        ctx.save();
+        ctx.rotate((Math.PI * 2 / 5) * i - Math.PI / 2);
+        ctx.beginPath();
+        ctx.ellipse(0, -r * 0.6, r * 0.38, r * 0.6, 0, 0, Math.PI * 2);
+        ctx.fillStyle = this.color;
+        ctx.fill();
+        ctx.restore();
+      }
+      ctx.beginPath();
+      ctx.arc(0, 0, s * 0.11, 0, Math.PI * 2);
+      ctx.fillStyle = this.centerColor;
+      ctx.fill();
+      for (let i = 0; i < 5; i++) {
+        const a = (Math.PI * 2 / 5) * i, d = s * 0.17;
+        ctx.beginPath();
+        ctx.arc(Math.cos(a) * d, Math.sin(a) * d, s * 0.035, 0, Math.PI * 2);
+        ctx.fillStyle = this.stamenColor;
+        ctx.fill();
+      }
+    }
+    drawPetal() {
+      ctx.beginPath();
+      ctx.ellipse(0, 0, this.size * 0.28, this.size * 0.48, 0, 0, Math.PI * 2);
+      ctx.fillStyle = this.color;
+      ctx.fill();
+    }
+    drawBud() {
+      ctx.beginPath();
+      ctx.arc(0, 0, this.size * 0.18, 0, Math.PI * 2);
+      ctx.fillStyle = this.color;
+      ctx.fill();
+    }
+  }
+
+  const petals = Array.from({ length: 75 }, () => new Petal());
+
+  // Warm bokeh dots — floating ambient light
+  class Bokeh {
+    constructor() { this.reset(true); }
+    reset(init) {
+      this.x = Math.random() * W;
+      this.y = init ? Math.random() * H : -10;
+      this.size = 2 + Math.random() * 6;
+      this.speedY = 0.1 + Math.random() * 0.4;
+      this.speedX = (Math.random() - 0.5) * 0.15;
+      this.alpha = 0.08 + Math.random() * 0.18;
+      this.pulseSpeed = 0.005 + Math.random() * 0.015;
+      this.pulsePhase = Math.random() * Math.PI * 2;
+      this.t = Math.random() * 1000;
+      // Warm colors: gold, orange, soft red
+      const colors = ['rgba(255,200,50,', 'rgba(255,150,30,', 'rgba(255,80,20,', 'rgba(255,220,100,'];
+      this.colorBase = colors[Math.floor(Math.random() * colors.length)];
+    }
+    update() {
+      this.t++;
+      this.y += this.speedY;
+      this.x += this.speedX + Math.sin(this.t * 0.005) * 0.15;
+      if (this.y > H + 20) this.reset(false);
+    }
+    draw() {
+      const pulse = this.alpha * (0.6 + 0.4 * Math.sin(this.t * this.pulseSpeed + this.pulsePhase));
+      const grad = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.size);
+      grad.addColorStop(0, this.colorBase + pulse + ')');
+      grad.addColorStop(1, this.colorBase + '0)');
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+      ctx.fillStyle = grad;
+      ctx.fill();
+    }
+  }
+
+  const bokehs = Array.from({ length: 40 }, () => new Bokeh());
+
+  function loop() {
+    requestAnimationFrame(loop);
+    ctx.clearRect(0, 0, W, H);
+    for (const b of bokehs) { b.update(); b.draw(); }
+    for (const p of petals) { p.update(); p.draw(); }
+  }
+  loop();
+})();
 
 // ============================================================
 // THREE.JS SETUP
 // ============================================================
 const scene = new THREE.Scene();
-scene.fog = new THREE.FogExp2(0x000000, 0.008);
+scene.fog = new THREE.FogExp2(0x1a0500, 0.006);
 
 const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
-camera.position.set(0, 5, 38);
+camera.position.set(0, 2, 36);
 camera.lookAt(0, -2, 0);
 
 const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-renderer.setClearColor(0x000000, 1);
+renderer.setClearColor(0x150200, 1);
 document.body.appendChild(renderer.domElement);
 
 // ============================================================
-// HEART PARAMETRIC (3D)
+// ĐÈN LỒNG PARAMETRIC — Lantern 3D shape
 // ============================================================
-function heartX(t) { return 16 * Math.pow(Math.sin(t), 3); }
-function heartY(t) { return 13 * Math.cos(t) - 5 * Math.cos(2*t) - 2 * Math.cos(3*t) - Math.cos(4*t); }
+function lanternProfile(t) {
+  // t: 0 (bottom) → 1 (top)
+  // Returns radius at that height
+  if (t < 0.08) {
+    // Bottom neck — narrow opening
+    return 0.8 + (t / 0.08) * 1.2;
+  }
+  if (t > 0.92) {
+    // Top neck — narrow opening
+    return 0.8 + ((1 - t) / 0.08) * 1.2;
+  }
+  // Main body — beautiful curved profile
+  const bt = (t - 0.08) / 0.84; // 0→1 within body
+  // Use sin for smooth bulge, add slight rib variation
+  const base = Math.sin(bt * Math.PI);
+  const ribs = 1 + 0.06 * Math.sin(bt * Math.PI * 8); // subtle horizontal ribs
+  return 2.0 + 4.2 * base * ribs;
+}
 
-function getHeartPoint(scale) {
-  const t = Math.random() * Math.PI * 2;
-  const fill = Math.pow(Math.random(), 0.5);
-  const x = heartX(t) * fill;
-  const y = heartY(t) * fill;
-  const dist = Math.sqrt(x*x + y*y);
-  const maxDist = 17;
-  const zRange = Math.sqrt(Math.max(0, 1 - (dist/maxDist) * (dist/maxDist))) * 3.5;
-  const z = (Math.random() - 0.5) * 2 * zRange;
-  return new THREE.Vector3(x * scale * 0.065, y * scale * 0.065, z * scale * 0.065);
+function getLanternPoint(scale) {
+  const u = Math.random() * Math.PI * 2;   // angle around
+  const t = Math.random();                   // 0→1 bottom→top
+
+  const maxR = lanternProfile(t);
+  // Fill the lantern (surface + some inner glow)
+  const fillMode = Math.random();
+  let r;
+  if (fillMode < 0.6) {
+    // Surface shell — most particles on the skin
+    r = maxR * (0.92 + Math.random() * 0.08);
+  } else {
+    // Inner glow fill
+    r = maxR * Math.pow(Math.random(), 0.6);
+  }
+
+  const x = r * Math.cos(u);
+  const z = r * Math.sin(u);
+  const y = (t - 0.5) * 14;  // total height ~14 units
+
+  return new THREE.Vector3(x * scale * 0.07, y * scale * 0.07, z * scale * 0.07);
+}
+
+// Frame rings — golden horizontal rings on the lantern
+function getLanternFramePoint(scale) {
+  const u = Math.random() * Math.PI * 2;
+  // Pick one of the rib positions
+  const ribPositions = [0.08, 0.2, 0.35, 0.5, 0.65, 0.8, 0.92];
+  const t = ribPositions[Math.floor(Math.random() * ribPositions.length)];
+  const maxR = lanternProfile(t) + 0.15;
+  const r = maxR * (0.97 + Math.random() * 0.03);
+  const x = r * Math.cos(u);
+  const z = r * Math.sin(u);
+  const y = (t - 0.5) * 14;
+  return new THREE.Vector3(x * scale * 0.07, y * scale * 0.07, z * scale * 0.07);
+}
+
+// Vertical ribs on the lantern
+function getLanternRibPoint(scale) {
+  const ribCount = 10;
+  const ribIndex = Math.floor(Math.random() * ribCount);
+  const u = (ribIndex / ribCount) * Math.PI * 2;
+  const t = 0.08 + Math.random() * 0.84; // body only
+  const maxR = lanternProfile(t) + 0.1;
+  const r = maxR * (0.98 + Math.random() * 0.02);
+  const x = r * Math.cos(u + (Math.random() - 0.5) * 0.03);
+  const z = r * Math.sin(u + (Math.random() - 0.5) * 0.03);
+  const y = (t - 0.5) * 14;
+  return new THREE.Vector3(x * scale * 0.07, y * scale * 0.07, z * scale * 0.07);
+}
+
+// Tassel — hanging threads at the bottom
+function getTasselPoint(scale) {
+  const u = Math.random() * Math.PI * 2;
+  const spreadTop = 0.6;
+  const spreadBot = 1.8;
+  const length = 2 + Math.random() * 4;
+  const tNorm = length / 6; // 0→1
+  const spread = spreadTop + tNorm * (spreadBot - spreadTop);
+  const r = Math.random() * spread;
+  const x = r * Math.cos(u);
+  const z = r * Math.sin(u);
+  const y = -7 - length; // starts below bottom of lantern
+
+  return new THREE.Vector3(x * scale * 0.07, y * scale * 0.07, z * scale * 0.07);
 }
 
 // ============================================================
 // MAIN GROUP
 // ============================================================
-const heartGroup = new THREE.Group();
-scene.add(heartGroup);
+const lanternGroup = new THREE.Group();
+scene.add(lanternGroup);
 
 // ============================================================
-// HEART PARTICLES
+// LANTERN BODY PARTICLES
 // ============================================================
-const heartGeometry = new THREE.BufferGeometry();
-const heartPositions = new Float32Array(CONFIG.heartParticles * 3);
-const heartColors = new Float32Array(CONFIG.heartParticles * 3);
-const heartSizes = new Float32Array(CONFIG.heartParticles);
+const bodyCount = CONFIG.lanternParticles;
+const bodyGeo = new THREE.BufferGeometry();
+const bodyPos = new Float32Array(bodyCount * 3);
+const bodyCols = new Float32Array(bodyCount * 3);
+const bodySizes = new Float32Array(bodyCount);
 
-for (let i = 0; i < CONFIG.heartParticles; i++) {
-  const p = getHeartPoint(CONFIG.heartScale);
-  heartPositions[i*3] = p.x;
-  heartPositions[i*3+1] = p.y;
-  heartPositions[i*3+2] = p.z;
-
-  const color = new THREE.Color(CONFIG.colors[Math.floor(Math.random() * CONFIG.colors.length)]);
-  heartColors[i*3] = color.r;
-  heartColors[i*3+1] = color.g;
-  heartColors[i*3+2] = color.b;
-
-  heartSizes[i] = CONFIG.particleSizeMin + Math.random() * (CONFIG.particleSizeMax - CONFIG.particleSizeMin);
+for (let i = 0; i < bodyCount; i++) {
+  let p;
+  const r = Math.random();
+  if (r < 0.7) {
+    p = getLanternPoint(CONFIG.lanternScale);
+    const color = new THREE.Color(CONFIG.colors[Math.floor(Math.random() * CONFIG.colors.length)]);
+    bodyCols[i*3] = color.r;
+    bodyCols[i*3+1] = color.g;
+    bodyCols[i*3+2] = color.b;
+  } else if (r < 0.85) {
+    p = getLanternFramePoint(CONFIG.lanternScale);
+    const color = new THREE.Color(CONFIG.frameColors[Math.floor(Math.random() * CONFIG.frameColors.length)]);
+    bodyCols[i*3] = color.r;
+    bodyCols[i*3+1] = color.g;
+    bodyCols[i*3+2] = color.b;
+  } else {
+    p = getLanternRibPoint(CONFIG.lanternScale);
+    const color = new THREE.Color(CONFIG.frameColors[Math.floor(Math.random() * CONFIG.frameColors.length)]);
+    bodyCols[i*3] = color.r;
+    bodyCols[i*3+1] = color.g;
+    bodyCols[i*3+2] = color.b;
+  }
+  bodyPos[i*3] = p.x;
+  bodyPos[i*3+1] = p.y;
+  bodyPos[i*3+2] = p.z;
+  bodySizes[i] = CONFIG.particleSizeMin + Math.random() * (CONFIG.particleSizeMax - CONFIG.particleSizeMin);
 }
 
-heartGeometry.setAttribute('position', new THREE.BufferAttribute(heartPositions, 3));
-heartGeometry.setAttribute('color', new THREE.BufferAttribute(heartColors, 3));
-heartGeometry.setAttribute('size', new THREE.BufferAttribute(heartSizes, 1));
+bodyGeo.setAttribute('position', new THREE.BufferAttribute(bodyPos, 3));
+bodyGeo.setAttribute('color', new THREE.BufferAttribute(bodyCols, 3));
+bodyGeo.setAttribute('size', new THREE.BufferAttribute(bodySizes, 1));
 
-const heartMaterial = new THREE.ShaderMaterial({
+const bodyMat = new THREE.ShaderMaterial({
   uniforms: {
     uTime: { value: 0 },
     uPulse: { value: 1.0 },
@@ -249,13 +577,13 @@ const heartMaterial = new THREE.ShaderMaterial({
     void main() {
       vColor = color;
       float phase = hash(float(gl_VertexID)) * 6.2831;
-      float speed = 1.5 + hash(float(gl_VertexID) + 100.0) * 3.0;
-      vAlpha = 0.35 + 0.65 * (0.5 + 0.5 * sin(uTime * speed + phase));
+      float speed = 1.2 + hash(float(gl_VertexID) + 100.0) * 2.5;
+      vAlpha = 0.3 + 0.7 * (0.5 + 0.5 * sin(uTime * speed + phase));
       vec3 pos = position;
-      float driftAmt = 0.08;
-      pos.x += sin(uTime * (0.5 + hash(float(gl_VertexID)+1.0)) + hash(float(gl_VertexID)+2.0) * 6.28) * driftAmt;
-      pos.y += cos(uTime * (0.4 + hash(float(gl_VertexID)+3.0)) + hash(float(gl_VertexID)+4.0) * 6.28) * driftAmt;
-      pos.z += sin(uTime * (0.3 + hash(float(gl_VertexID)+5.0)) + hash(float(gl_VertexID)+6.0) * 6.28) * driftAmt;
+      float driftAmt = 0.06;
+      pos.x += sin(uTime * (0.4 + hash(float(gl_VertexID)+1.0)) + hash(float(gl_VertexID)+2.0) * 6.28) * driftAmt;
+      pos.y += cos(uTime * (0.35 + hash(float(gl_VertexID)+3.0)) + hash(float(gl_VertexID)+4.0) * 6.28) * driftAmt;
+      pos.z += sin(uTime * (0.25 + hash(float(gl_VertexID)+5.0)) + hash(float(gl_VertexID)+6.0) * 6.28) * driftAmt;
       pos *= uPulse;
       vec4 mvPosition = modelViewMatrix * vec4(pos, 1.0);
       gl_PointSize = size * uPixelRatio * 120.0 / -mvPosition.z;
@@ -270,7 +598,7 @@ const heartMaterial = new THREE.ShaderMaterial({
       if (d > 0.5) discard;
       float glow = 1.0 - smoothstep(0.0, 0.5, d);
       glow = pow(glow, 1.5);
-      gl_FragColor = vec4(vColor * glow * 1.5, glow * vAlpha);
+      gl_FragColor = vec4(vColor * glow * 1.6, glow * vAlpha);
     }
   `,
   transparent: true,
@@ -278,8 +606,81 @@ const heartMaterial = new THREE.ShaderMaterial({
   depthWrite: false,
 });
 
-const heartPoints = new THREE.Points(heartGeometry, heartMaterial);
-heartGroup.add(heartPoints);
+lanternGroup.add(new THREE.Points(bodyGeo, bodyMat));
+
+// ============================================================
+// TASSEL PARTICLES — Tua rua đèn lồng
+// ============================================================
+const tasselCount = CONFIG.tasselParticles;
+const tasselGeo = new THREE.BufferGeometry();
+const tasselPos = new Float32Array(tasselCount * 3);
+const tasselCols = new Float32Array(tasselCount * 3);
+const tasselSizes = new Float32Array(tasselCount);
+
+for (let i = 0; i < tasselCount; i++) {
+  const p = getTasselPoint(CONFIG.lanternScale);
+  tasselPos[i*3] = p.x;
+  tasselPos[i*3+1] = p.y;
+  tasselPos[i*3+2] = p.z;
+
+  // Tassel: gold to dark red gradient
+  const mix = Math.random();
+  const c1 = new THREE.Color(0xffd700);
+  const c2 = new THREE.Color(0xcc1100);
+  const color = c1.clone().lerp(c2, mix);
+  tasselCols[i*3] = color.r;
+  tasselCols[i*3+1] = color.g;
+  tasselCols[i*3+2] = color.b;
+  tasselSizes[i] = 0.03 + Math.random() * 0.08;
+}
+
+tasselGeo.setAttribute('position', new THREE.BufferAttribute(tasselPos, 3));
+tasselGeo.setAttribute('color', new THREE.BufferAttribute(tasselCols, 3));
+tasselGeo.setAttribute('size', new THREE.BufferAttribute(tasselSizes, 1));
+
+const tasselMat = new THREE.ShaderMaterial({
+  uniforms: {
+    uTime: { value: 0 },
+    uPixelRatio: { value: renderer.getPixelRatio() },
+  },
+  vertexShader: `
+    attribute float size;
+    attribute vec3 color;
+    varying vec3 vColor;
+    varying float vAlpha;
+    uniform float uTime;
+    uniform float uPixelRatio;
+    float hash(float n) { return fract(sin(n) * 43758.5453); }
+    void main() {
+      vColor = color;
+      float phase = hash(float(gl_VertexID)) * 6.28;
+      vAlpha = 0.3 + 0.5 * (0.5 + 0.5 * sin(uTime * 1.5 + phase));
+      vec3 pos = position;
+      // Tassel sway
+      float sway = sin(uTime * 0.8 + pos.y * 0.5) * 0.12;
+      pos.x += sway;
+      pos.z += sway * 0.5;
+      vec4 mv = modelViewMatrix * vec4(pos, 1.0);
+      gl_PointSize = size * uPixelRatio * 100.0 / -mv.z;
+      gl_Position = projectionMatrix * mv;
+    }
+  `,
+  fragmentShader: `
+    varying vec3 vColor;
+    varying float vAlpha;
+    void main() {
+      float d = length(gl_PointCoord - vec2(0.5));
+      if (d > 0.5) discard;
+      float glow = 1.0 - smoothstep(0.0, 0.5, d);
+      glow = pow(glow, 1.8);
+      gl_FragColor = vec4(vColor * 1.3, glow * vAlpha);
+    }
+  `,
+  transparent: true,
+  blending: THREE.AdditiveBlending,
+  depthWrite: false,
+});
+lanternGroup.add(new THREE.Points(tasselGeo, tasselMat));
 
 // ============================================================
 // CIRCUMSTELLAR DISK — DUST PARTICLES
@@ -291,29 +692,21 @@ function createDiskDust(disk) {
   const sizes = new Float32Array(count);
   const cols = new Float32Array(count * 3);
   const baseColor = new THREE.Color(disk.dustColor);
-
   for (let i = 0; i < count; i++) {
     const angle = Math.random() * Math.PI * 2;
     const r = disk.radiusInner + Math.random() * (disk.radiusOuter - disk.radiusInner);
-    // Flatten into disk shape with slight vertical scatter
-    const scatter = (Math.random() - 0.5) * 0.6;
-    pos[i*3]     = Math.cos(angle) * r;
-    pos[i*3+1]   = scatter;
-    pos[i*3+2]   = Math.sin(angle) * r;
-
-    sizes[i] = 0.02 + Math.random() * 0.08;
-
-    // Color variation
-    const variation = 0.7 + Math.random() * 0.3;
-    cols[i*3]   = baseColor.r * variation;
-    cols[i*3+1] = baseColor.g * variation;
-    cols[i*3+2] = baseColor.b * variation;
+    pos[i*3] = Math.cos(angle) * r;
+    pos[i*3+1] = (Math.random() - 0.5) * 0.5;
+    pos[i*3+2] = Math.sin(angle) * r;
+    sizes[i] = 0.02 + Math.random() * 0.07;
+    const v = 0.7 + Math.random() * 0.3;
+    cols[i*3] = baseColor.r * v;
+    cols[i*3+1] = baseColor.g * v;
+    cols[i*3+2] = baseColor.b * v;
   }
-
   geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
   geo.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
   geo.setAttribute('color', new THREE.BufferAttribute(cols, 3));
-
   const mat = new THREE.ShaderMaterial({
     uniforms: {
       uTime: { value: 0 },
@@ -321,72 +714,57 @@ function createDiskDust(disk) {
       uPixelRatio: { value: renderer.getPixelRatio() },
     },
     vertexShader: `
-      attribute float size;
-      attribute vec3 color;
-      varying vec3 vColor;
-      varying float vAlpha;
-      uniform float uTime;
-      uniform float uPixelRatio;
-      float hash(float n) { return fract(sin(n) * 43758.5453); }
-      void main() {
-        vColor = color;
-        float phase = hash(float(gl_VertexID)) * 6.28;
-        vAlpha = 0.4 + 0.6 * (0.5 + 0.5 * sin(uTime * (1.0 + hash(float(gl_VertexID)+10.0)*2.0) + phase));
-        vec4 mv = modelViewMatrix * vec4(position, 1.0);
-        gl_PointSize = size * uPixelRatio * 100.0 / -mv.z;
-        gl_Position = projectionMatrix * mv;
+      attribute float size; attribute vec3 color;
+      varying vec3 vColor; varying float vAlpha;
+      uniform float uTime; uniform float uPixelRatio;
+      float hash(float n){return fract(sin(n)*43758.5453);}
+      void main(){
+        vColor=color;
+        float phase=hash(float(gl_VertexID))*6.28;
+        vAlpha=0.4+0.6*(0.5+0.5*sin(uTime*(1.0+hash(float(gl_VertexID)+10.0)*2.0)+phase));
+        vec4 mv=modelViewMatrix*vec4(position,1.0);
+        gl_PointSize=size*uPixelRatio*100.0/-mv.z;
+        gl_Position=projectionMatrix*mv;
       }
     `,
     fragmentShader: `
-      varying vec3 vColor;
-      varying float vAlpha;
-      uniform float uOpacity;
-      void main() {
-        float d = length(gl_PointCoord - vec2(0.5));
-        if (d > 0.5) discard;
-        float glow = 1.0 - smoothstep(0.0, 0.5, d);
-        glow = pow(glow, 2.0);
-        gl_FragColor = vec4(vColor * 1.3, glow * vAlpha * uOpacity);
+      varying vec3 vColor; varying float vAlpha; uniform float uOpacity;
+      void main(){
+        float d=length(gl_PointCoord-vec2(0.5));
+        if(d>0.5)discard;
+        float glow=1.0-smoothstep(0.0,0.5,d);
+        glow=pow(glow,2.0);
+        gl_FragColor=vec4(vColor*1.3,glow*vAlpha*uOpacity);
       }
     `,
     transparent: true,
     blending: THREE.AdditiveBlending,
     depthWrite: false,
   });
-
   return new THREE.Points(geo, mat);
 }
 
 // ============================================================
-// CIRCUMSTELLAR DISK — TEXT SPRITES
+// TEXT SPRITES
 // ============================================================
 function createTextTexture(text, fontSize, color, fontFamily) {
   const c = document.createElement('canvas');
   const ctx = c.getContext('2d');
-  const scale = 6; // Higher res
+  const scale = 6;
   ctx.font = `bold ${fontSize * scale}px ${fontFamily}`;
-  const metrics = ctx.measureText(text);
-  const w = Math.ceil(metrics.width) + 40;
+  const w = Math.ceil(ctx.measureText(text).width) + 40;
   const h = Math.ceil(fontSize * scale * 2);
-  c.width = w;
-  c.height = h;
-
-  // Glow effect
+  c.width = w; c.height = h;
   ctx.font = `bold ${fontSize * scale}px ${fontFamily}`;
   ctx.textBaseline = 'middle';
   ctx.textAlign = 'center';
-
-  // Outer glow
   ctx.shadowColor = color;
   ctx.shadowBlur = 15 * scale;
   ctx.fillStyle = color;
   ctx.fillText(text, w/2, h/2);
-
-  // Crisp text on top
   ctx.shadowBlur = 0;
   ctx.fillStyle = color;
   ctx.fillText(text, w/2, h/2);
-
   const tex = new THREE.CanvasTexture(c);
   tex.needsUpdate = true;
   return { texture: tex, aspect: w / h };
@@ -396,145 +774,102 @@ function createDiskTexts(disk) {
   const group = new THREE.Group();
   const texts = disk.texts;
   const count = texts.length;
-  const angleStep = (Math.PI * 2) / count;
-
+  const step = (Math.PI * 2) / count;
   for (let i = 0; i < count; i++) {
     const { texture, aspect } = createTextTexture(
-      texts[i], 36, disk.textColor, "'Dancing Script', 'Great Vibes', cursive"
+      texts[i], 36, disk.textColor, "'Dancing Script','Great Vibes',cursive"
     );
-
-    const spriteMat = new THREE.SpriteMaterial({
-      map: texture,
-      transparent: true,
-      blending: THREE.AdditiveBlending,
-      depthWrite: false,
-      opacity: 0.92,
+    const mat = new THREE.SpriteMaterial({
+      map: texture, transparent: true,
+      blending: THREE.AdditiveBlending, depthWrite: false, opacity: 0.9,
     });
-    const sprite = new THREE.Sprite(spriteMat);
-
-    const angle = angleStep * i;
+    const sprite = new THREE.Sprite(mat);
+    const angle = step * i;
     const r = disk.radiusInner + (disk.radiusOuter - disk.radiusInner) * 0.5;
-    // Slight radius variation for natural feel
-    const rVariation = r + (Math.random() - 0.5) * (disk.radiusOuter - disk.radiusInner) * 0.35;
-
-    sprite.position.set(
-      Math.cos(angle) * rVariation,
-      (Math.random() - 0.5) * 0.3,
-      Math.sin(angle) * rVariation
-    );
-
+    const rv = r + (Math.random() - 0.5) * (disk.radiusOuter - disk.radiusInner) * 0.3;
+    sprite.position.set(Math.cos(angle) * rv, (Math.random() - 0.5) * 0.3, Math.sin(angle) * rv);
     const s = disk.textSize;
     sprite.scale.set(s * aspect * 0.7, s * 0.7, 1);
     group.add(sprite);
   }
-
   return group;
 }
 
 // ============================================================
-// BUILD ALL 3 DISKS
+// BUILD DISKS
 // ============================================================
 const diskGroups = [];
 const diskDustMaterials = [];
 
-CONFIG.disks.forEach((diskConf, idx) => {
-  const diskGroup = new THREE.Group();
-  diskGroup.position.y = diskConf.yOffset;
-  diskGroup.rotation.x = diskConf.tiltX;
+CONFIG.disks.forEach((diskConf) => {
+  const dg = new THREE.Group();
+  dg.position.y = diskConf.yOffset;
+  dg.rotation.x = diskConf.tiltX;
 
-  // Dust particles
   const dust = createDiskDust(diskConf);
-  diskGroup.add(dust);
+  dg.add(dust);
   diskDustMaterials.push(dust.material);
 
-  // Text sprites
-  const textGroup = createDiskTexts(diskConf);
-  diskGroup.add(textGroup);
+  dg.add(createDiskTexts(diskConf));
 
-  // Glow ring (torus for rim light)
-  const ringRadius = (diskConf.radiusInner + diskConf.radiusOuter) / 2;
-  const tubeRadius = (diskConf.radiusOuter - diskConf.radiusInner) / 2;
-  const torusGeo = new THREE.TorusGeometry(ringRadius, tubeRadius, 8, 80);
+  const ringR = (diskConf.radiusInner + diskConf.radiusOuter) / 2;
+  const tubeR = (diskConf.radiusOuter - diskConf.radiusInner) / 2;
+  const torusGeo = new THREE.TorusGeometry(ringR, tubeR, 8, 80);
   const torusMat = new THREE.ShaderMaterial({
-    uniforms: {
-      uColor: { value: new THREE.Color(diskConf.dustColor) },
-      uTime: { value: 0 },
-    },
+    uniforms: { uColor: { value: new THREE.Color(diskConf.dustColor) }, uTime: { value: 0 } },
     vertexShader: `
-      varying vec3 vNormal;
-      varying vec3 vPos;
-      void main() {
-        vNormal = normalize(normalMatrix * normal);
-        vPos = position;
-        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-      }
+      varying vec3 vNormal; varying vec3 vPos;
+      void main(){ vNormal=normalize(normalMatrix*normal); vPos=position;
+      gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0); }
     `,
     fragmentShader: `
-      uniform vec3 uColor;
-      uniform float uTime;
-      varying vec3 vNormal;
-      varying vec3 vPos;
-      void main() {
-        float rim = 1.0 - abs(dot(vNormal, vec3(0.0, 1.0, 0.0)));
-        rim = pow(rim, 3.0);
-        float shimmer = 0.7 + 0.3 * sin(vPos.x * 2.0 + vPos.z * 2.0 + uTime * 1.5);
-        gl_FragColor = vec4(uColor * shimmer, rim * 0.06);
+      uniform vec3 uColor; uniform float uTime;
+      varying vec3 vNormal; varying vec3 vPos;
+      void main(){
+        float rim=1.0-abs(dot(vNormal,vec3(0.0,1.0,0.0)));
+        rim=pow(rim,3.0);
+        float shimmer=0.7+0.3*sin(vPos.x*2.0+vPos.z*2.0+uTime*1.5);
+        gl_FragColor=vec4(uColor*shimmer,rim*0.05);
       }
     `,
-    transparent: true,
-    blending: THREE.AdditiveBlending,
-    side: THREE.DoubleSide,
-    depthWrite: false,
+    transparent: true, blending: THREE.AdditiveBlending,
+    side: THREE.DoubleSide, depthWrite: false,
   });
-  const torusMesh = new THREE.Mesh(torusGeo, torusMat);
-  torusMesh.rotation.x = Math.PI / 2;
-  diskGroup.add(torusMesh);
+  const tm = new THREE.Mesh(torusGeo, torusMat);
+  tm.rotation.x = Math.PI / 2;
+  dg.add(tm);
 
-  diskGroup.userData = {
-    speed: diskConf.speed,
-    direction: diskConf.direction,
-    torusMat: torusMat,
-  };
-
-  heartGroup.add(diskGroup);
-  diskGroups.push(diskGroup);
+  dg.userData = { speed: diskConf.speed, direction: diskConf.direction, torusMat };
+  lanternGroup.add(dg);
+  diskGroups.push(dg);
 });
 
 // ============================================================
-// HEART AMBIENT GLOW
+// LANTERN AMBIENT GLOW
 // ============================================================
-const glowGeo = new THREE.SphereGeometry(9, 32, 32);
+const glowGeo = new THREE.SphereGeometry(7, 32, 32);
 const glowMat = new THREE.ShaderMaterial({
-  uniforms: {
-    uColor: { value: new THREE.Color(0xff1493) },
-    uTime: { value: 0 },
-  },
+  uniforms: { uColor: { value: new THREE.Color(0xff2200) }, uTime: { value: 0 } },
   vertexShader: `
     varying vec3 vNormal;
-    void main() {
-      vNormal = normalize(normalMatrix * normal);
-      gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-    }
+    void main(){ vNormal=normalize(normalMatrix*normal);
+    gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0); }
   `,
   fragmentShader: `
-    uniform vec3 uColor;
-    uniform float uTime;
-    varying vec3 vNormal;
-    void main() {
-      float intensity = pow(0.65 - dot(vNormal, vec3(0.0, 0.0, 1.0)), 3.0);
-      float pulse = 0.5 + 0.5 * sin(uTime * 2.0);
-      gl_FragColor = vec4(uColor, intensity * 0.1 * (0.8 + 0.2 * pulse));
+    uniform vec3 uColor; uniform float uTime; varying vec3 vNormal;
+    void main(){
+      float intensity=pow(0.65-dot(vNormal,vec3(0.0,0.0,1.0)),3.0);
+      float pulse=0.5+0.5*sin(uTime*2.0);
+      gl_FragColor=vec4(uColor,intensity*0.12*(0.8+0.2*pulse));
     }
   `,
-  transparent: true,
-  blending: THREE.AdditiveBlending,
-  side: THREE.BackSide,
-  depthWrite: false,
+  transparent: true, blending: THREE.AdditiveBlending,
+  side: THREE.BackSide, depthWrite: false,
 });
-heartGroup.add(new THREE.Mesh(glowGeo, glowMat));
+lanternGroup.add(new THREE.Mesh(glowGeo, glowMat));
 
 // ============================================================
-// BACKGROUND FALLING PARTICLES
+// BACKGROUND PARTICLES
 // ============================================================
 const bgCount = CONFIG.fallingCount;
 const bgGeo = new THREE.BufferGeometry();
@@ -542,94 +877,72 @@ const bgPos = new Float32Array(bgCount * 3);
 const bgVel = new Float32Array(bgCount);
 const bgCols = new Float32Array(bgCount * 3);
 const bgSizes = new Float32Array(bgCount);
-
 for (let i = 0; i < bgCount; i++) {
-  bgPos[i*3]   = (Math.random() - 0.5) * 80;
+  bgPos[i*3] = (Math.random() - 0.5) * 80;
   bgPos[i*3+1] = (Math.random() - 0.5) * 60;
   bgPos[i*3+2] = (Math.random() - 0.5) * 60;
-  bgVel[i] = 0.01 + Math.random() * 0.03;
+  bgVel[i] = 0.01 + Math.random() * 0.025;
   const c = new THREE.Color(CONFIG.colors[Math.floor(Math.random() * CONFIG.colors.length)]);
   bgCols[i*3] = c.r; bgCols[i*3+1] = c.g; bgCols[i*3+2] = c.b;
-  bgSizes[i] = 0.02 + Math.random() * 0.06;
+  bgSizes[i] = 0.02 + Math.random() * 0.05;
 }
-
 bgGeo.setAttribute('position', new THREE.BufferAttribute(bgPos, 3));
 bgGeo.setAttribute('color', new THREE.BufferAttribute(bgCols, 3));
 bgGeo.setAttribute('size', new THREE.BufferAttribute(bgSizes, 1));
-
 const bgMat = new THREE.ShaderMaterial({
   uniforms: { uPixelRatio: { value: renderer.getPixelRatio() } },
   vertexShader: `
-    attribute float size;
-    attribute vec3 color;
-    varying vec3 vColor;
-    uniform float uPixelRatio;
-    void main() {
-      vColor = color;
-      vec4 mv = modelViewMatrix * vec4(position, 1.0);
-      gl_PointSize = size * uPixelRatio * 100.0 / -mv.z;
-      gl_Position = projectionMatrix * mv;
-    }
+    attribute float size; attribute vec3 color;
+    varying vec3 vColor; uniform float uPixelRatio;
+    void main(){ vColor=color; vec4 mv=modelViewMatrix*vec4(position,1.0);
+    gl_PointSize=size*uPixelRatio*100.0/-mv.z; gl_Position=projectionMatrix*mv; }
   `,
   fragmentShader: `
     varying vec3 vColor;
-    void main() {
-      float d = length(gl_PointCoord - vec2(0.5));
-      if (d > 0.5) discard;
-      float glow = 1.0 - smoothstep(0.0, 0.5, d);
-      gl_FragColor = vec4(vColor, glow * 0.25);
-    }
+    void main(){ float d=length(gl_PointCoord-vec2(0.5));
+    if(d>0.5)discard; float glow=1.0-smoothstep(0.0,0.5,d);
+    gl_FragColor=vec4(vColor,glow*0.2); }
   `,
-  transparent: true,
-  blending: THREE.AdditiveBlending,
-  depthWrite: false,
+  transparent: true, blending: THREE.AdditiveBlending, depthWrite: false,
 });
 scene.add(new THREE.Points(bgGeo, bgMat));
 
 // ============================================================
-// MOUSE / TOUCH INTERACTION
+// INTERACTION
 // ============================================================
 let isDragging = false;
 let previousMouse = { x: 0, y: 0 };
-let targetRotationX = 0.25; // slight downward look default
-let targetRotationY = 0;
-let currentRotationX = 0.25;
-let currentRotationY = 0;
-let autoRotateAngle = 0;
-let lastInteraction = 0;
+let targetRotX = 0.15, targetRotY = 0;
+let currentRotX = 0.15, currentRotY = 0;
+let autoAngle = 0, lastInteraction = 0;
 
-function onPointerDown(e) {
+function onDown(e) {
   isDragging = true;
   const p = e.touches ? e.touches[0] : e;
-  previousMouse.x = p.clientX;
-  previousMouse.y = p.clientY;
+  previousMouse.x = p.clientX; previousMouse.y = p.clientY;
   lastInteraction = performance.now();
 }
-function onPointerMove(e) {
+function onMove(e) {
   if (!isDragging) return;
   e.preventDefault();
   const p = e.touches ? e.touches[0] : e;
-  const dx = p.clientX - previousMouse.x;
-  const dy = p.clientY - previousMouse.y;
-  targetRotationY += dx * 0.008;
-  targetRotationX += dy * 0.006;
-  targetRotationX = Math.max(-Math.PI * 0.45, Math.min(Math.PI * 0.45, targetRotationX));
-  previousMouse.x = p.clientX;
-  previousMouse.y = p.clientY;
+  targetRotY += (p.clientX - previousMouse.x) * 0.008;
+  targetRotX += (p.clientY - previousMouse.y) * 0.006;
+  targetRotX = Math.max(-Math.PI * 0.4, Math.min(Math.PI * 0.4, targetRotX));
+  previousMouse.x = p.clientX; previousMouse.y = p.clientY;
   lastInteraction = performance.now();
 }
-function onPointerUp() { isDragging = false; }
+function onUp() { isDragging = false; }
 
-renderer.domElement.addEventListener('mousedown', onPointerDown);
-window.addEventListener('mousemove', onPointerMove);
-window.addEventListener('mouseup', onPointerUp);
-renderer.domElement.addEventListener('touchstart', onPointerDown, { passive: false });
-window.addEventListener('touchmove', onPointerMove, { passive: false });
-window.addEventListener('touchend', onPointerUp);
-
+renderer.domElement.addEventListener('mousedown', onDown);
+window.addEventListener('mousemove', onMove);
+window.addEventListener('mouseup', onUp);
+renderer.domElement.addEventListener('touchstart', onDown, { passive: false });
+window.addEventListener('touchmove', onMove, { passive: false });
+window.addEventListener('touchend', onUp);
 renderer.domElement.addEventListener('wheel', (e) => {
   e.preventDefault();
-  camera.position.z = Math.max(18, Math.min(60, camera.position.z + e.deltaY * 0.03));
+  camera.position.z = Math.max(16, Math.min(55, camera.position.z + e.deltaY * 0.03));
 }, { passive: false });
 
 // ============================================================
@@ -643,7 +956,7 @@ function getPulse(t) {
 }
 
 // ============================================================
-// ANIMATION LOOP
+// ANIMATION
 // ============================================================
 const clock = new THREE.Clock();
 
@@ -652,38 +965,30 @@ function animate() {
   const elapsed = clock.getElapsedTime();
   const dt = clock.getDelta();
 
-  // Auto-rotate
-  const timeSinceInteraction = (performance.now() - lastInteraction) / 1000;
-  if (timeSinceInteraction > 2.5) {
-    autoRotateAngle += CONFIG.autoRotateSpeed * dt;
-    targetRotationY = autoRotateAngle;
+  const since = (performance.now() - lastInteraction) / 1000;
+  if (since > 2.5) {
+    autoAngle += CONFIG.autoRotateSpeed * dt;
+    targetRotY = autoAngle;
   } else {
-    autoRotateAngle = targetRotationY;
+    autoAngle = targetRotY;
   }
 
-  // Smooth rotation
-  currentRotationX += (targetRotationX - currentRotationX) * 0.06;
-  currentRotationY += (targetRotationY - currentRotationY) * 0.06;
-  heartGroup.rotation.x = currentRotationX;
-  heartGroup.rotation.y = currentRotationY;
+  currentRotX += (targetRotX - currentRotX) * 0.06;
+  currentRotY += (targetRotY - currentRotY) * 0.06;
+  lanternGroup.rotation.x = currentRotX;
+  lanternGroup.rotation.y = currentRotY;
 
-  // Heart uniforms
-  heartMaterial.uniforms.uTime.value = elapsed;
-  heartMaterial.uniforms.uPulse.value = getPulse(elapsed);
+  bodyMat.uniforms.uTime.value = elapsed;
+  bodyMat.uniforms.uPulse.value = getPulse(elapsed);
+  tasselMat.uniforms.uTime.value = elapsed;
   glowMat.uniforms.uTime.value = elapsed;
 
-  // Rotate disks
   diskGroups.forEach(dg => {
     dg.rotation.y += dg.userData.speed * dg.userData.direction * dt;
     dg.userData.torusMat.uniforms.uTime.value = elapsed;
   });
+  diskDustMaterials.forEach(m => { m.uniforms.uTime.value = elapsed; });
 
-  // Update dust uniforms
-  diskDustMaterials.forEach(m => {
-    m.uniforms.uTime.value = elapsed;
-  });
-
-  // Falling bg particles
   const positions = bgGeo.attributes.position.array;
   for (let i = 0; i < bgCount; i++) {
     positions[i*3+1] -= bgVel[i];
@@ -707,7 +1012,8 @@ window.addEventListener('resize', () => {
   renderer.setSize(window.innerWidth, window.innerHeight);
   const pr = Math.min(window.devicePixelRatio, 2);
   renderer.setPixelRatio(pr);
-  heartMaterial.uniforms.uPixelRatio.value = pr;
+  bodyMat.uniforms.uPixelRatio.value = pr;
+  tasselMat.uniforms.uPixelRatio.value = pr;
   bgMat.uniforms.uPixelRatio.value = pr;
   diskDustMaterials.forEach(m => { m.uniforms.uPixelRatio.value = pr; });
 });
@@ -715,33 +1021,43 @@ window.addEventListener('resize', () => {
 animate();
 
 // ============================================================
-// MUSIC CONTROL
+// MUSIC — Auto-play
 // ============================================================
 const bgMusic = document.getElementById('bgMusic');
 const musicControl = document.getElementById('musicControl');
 let isPlaying = false;
 
-// Try to autoplay when user first interacts
-let hasInteracted = false;
 function tryAutoplay() {
-  if (!hasInteracted) {
+  bgMusic.play().then(() => {
+    isPlaying = true;
+    musicControl.classList.add('playing');
+    musicControl.textContent = '🎵';
+  }).catch(() => {
+    isPlaying = false;
+    musicControl.classList.remove('playing');
+    musicControl.textContent = '🔇';
+  });
+}
+tryAutoplay();
+
+let hasInteracted = false;
+function onFirstInteraction() {
+  if (!hasInteracted && !isPlaying) {
     hasInteracted = true;
     bgMusic.play().then(() => {
       isPlaying = true;
       musicControl.classList.add('playing');
-    }).catch(() => {
-      // Autoplay blocked, user needs to click
-      isPlaying = false;
-      musicControl.classList.remove('playing');
-    });
+      musicControl.textContent = '🎵';
+    }).catch(() => {});
   }
 }
-
-document.addEventListener('click', tryAutoplay, { once: true });
-document.addEventListener('touchstart', tryAutoplay, { once: true });
+document.addEventListener('click', onFirstInteraction, { once: false });
+document.addEventListener('touchstart', onFirstInteraction, { once: false });
+document.addEventListener('keydown', onFirstInteraction, { once: false });
 
 musicControl.addEventListener('click', (e) => {
   e.stopPropagation();
+  hasInteracted = true;
   if (isPlaying) {
     bgMusic.pause();
     musicControl.textContent = '🔇';
